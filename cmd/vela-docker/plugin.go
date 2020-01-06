@@ -13,6 +13,49 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Plugin represents the configuration loaded for the plugin.
+type Plugin struct {
+	// build arguments loaded for the plugin
+	Build *Build
+	// image arguments loaded for the plugin
+	Image *Image
+	// registry arguments loaded for the plugin
+	Registry *Registry
+	// repo arguments loaded for the plugin
+	Repo *Repo
+}
+
+// Validate verifies the Plugin is properly configured.
+func (p *Plugin) Validate() error {
+	logrus.Debug("validating plugin configuration")
+
+	// validate build configuration
+	err := p.Build.Validate()
+	if err != nil {
+		return err
+	}
+
+	// validate image configuration
+	err = p.Image.Validate()
+	if err != nil {
+		return err
+	}
+
+	// validate registry configuration
+	err = p.Registry.Validate()
+	if err != nil {
+		return err
+	}
+
+	// validate repo configuration
+	err = p.Repo.Validate()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // helper function to write a docker conf to kaniko user dir
 func dockerConf(p plugin) error {
 
