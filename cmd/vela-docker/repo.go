@@ -9,6 +9,8 @@ import (
 
 // Repo represents the plugin configuration for repo information.
 type Repo struct {
+	// enable tagging of image via commit or tag
+	AutoTag bool
 	// enable caching of image layers
 	Cache bool
 	// enable caching of image layers for a specific repo
@@ -17,8 +19,6 @@ type Repo struct {
 	Name string
 	// tags of the image for the repository
 	Tags []string
-	// enable tagging of image via commit or tag
-	AutoTag bool
 }
 
 // Validate verifies the Repo is properly configured.
