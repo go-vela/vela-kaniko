@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Image represents the CLI configuration for image information.
+// Image represents the plugin configuration for image information.
 type Image struct {
 	// variables passed to the image at build-time
 	Args []string
