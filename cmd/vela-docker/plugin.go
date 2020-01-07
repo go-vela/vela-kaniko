@@ -29,6 +29,11 @@ type Plugin struct {
 	Repo *Repo
 }
 
+// Exec formats and runs the commands for building and publishing a Docker image.
+func (p *Plugin) Exec() error {
+	return nil
+}
+
 // Validate verifies the Plugin is properly configured.
 func (p *Plugin) Validate() error {
 	logrus.Debug("validating plugin configuration")
