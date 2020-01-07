@@ -10,8 +10,12 @@ import (
 	"os/exec"
 	"sync"
 
+	"github.com/spf13/afero"
+
 	"github.com/sirupsen/logrus"
 )
+
+var appFS = afero.NewOsFs()
 
 // Plugin represents the configuration loaded for the plugin.
 type Plugin struct {
