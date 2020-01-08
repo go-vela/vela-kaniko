@@ -2,10 +2,8 @@ package main
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"sync"
@@ -65,21 +63,8 @@ func (p *Plugin) Validate() error {
 	return nil
 }
 
-// helper function to write a docker conf to kaniko user dir
-func dockerConf(p plugin) error {
-
-	auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", p.Username, p.Password)))
-
-	err := ioutil.WriteFile(fmt.Sprint("/kaniko/.docker/config.json"), []byte(fmt.Sprintf(conf, p.Registry, auth)), 0644)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // helper function to convert the plugin configuration into kaniko CLI flags
-func buildCommand(p plugin) []string {
+func buildCommand(p *Plugin) []string {
 
 	flags := []string{}
 
@@ -91,36 +76,36 @@ func buildCommand(p plugin) []string {
 
 	// Add required and default fields to kaniko command
 	logrus.Debug("...add required kaniko flags")
-	for _, tag := range p.Tags {
-		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo, tag))
+	for _, tag := range p.Repo.Tags {
+		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo.Name, tag))
 	}
 
-	flags = append(flags, fmt.Sprintf("--verbosity=%s", p.LogLevel))
-	if len(p.Context) != 0 {
-		flags = append(flags, fmt.Sprintf("--context=%s/%s", dir, p.Context))
+	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
+	if len(p.Image.Context) != 0 {
+		flags = append(flags, fmt.Sprintf("--context=%s/%s", dir, p.Image.Context))
 	} else if dir != "/" {
 		flags = append(flags, fmt.Sprintf("--context=%s", dir))
 	}
 
 	// handle adding optional fields to kaniko commands
 	logrus.Debug("...add optional kaniko flags")
-	if len(p.Dockerfile) != 0 {
-		flags = append(flags, fmt.Sprintf("--dockerfile=%s", p.Dockerfile))
+	if len(p.Image.Dockerfile) != 0 {
+		flags = append(flags, fmt.Sprintf("--dockerfile=%s", p.Image.Dockerfile))
 	}
-	if p.DryRun {
+	if p.Registry.DryRun {
 		flags = append(flags, fmt.Sprint("--no-push"))
 	}
-	if len(p.BuildArgs) != 0 {
-		for _, arg := range p.BuildArgs {
+	if len(p.Image.Args) != 0 {
+		for _, arg := range p.Image.Args {
 			flags = append(flags, fmt.Sprintf("--build-arg=%s", arg))
 		}
 	}
-	if p.Cache {
+	if p.Repo.Cache {
 		flags = append(flags, fmt.Sprint("--cache"))
-		if len(p.CacheRepo) != 0 {
-			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.CacheRepo))
+		if len(p.Repo.CacheName) != 0 {
+			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.CacheName))
 		} else {
-			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo))
+			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.Name))
 		}
 	}
 
@@ -130,7 +115,7 @@ func buildCommand(p plugin) []string {
 }
 
 // helper function to run the kaniko binary against provided plugin configuration
-func run(flags []string) error {
+func kaniko(flags []string) error {
 
 	cmd := exec.Command("/kaniko/executor", flags...)
 	var stdoutBuf, stderrBuf bytes.Buffer

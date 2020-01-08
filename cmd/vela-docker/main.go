@@ -7,122 +7,134 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
-// plugin struct represents fields user can present to plugin
-type plugin struct {
-	Registry   string   // registry you plan to upload docker image
-	Repo       string   // repository name for the image
-	Tags       []string // repository tag for the image
-	Username   string   // authenticates with this username
-	Password   string   // authenticates with this password
-	Dockerfile string   // dockerfile to be used, defaults to Dockerfile
-	DryRun     bool     // boolean if the docker image should be pushed at the end
-	Context    string   // the context path to use, defaults to root of the git repo
-	BuildArgs  []string // custom arguments passed to docker build
-	LogLevel   string   // enable verbose logs on plugin
-	Cache      bool     // enable docker image layer caching
-	CacheRepo  string   // enable docker image layer caching for a specific repo, note cache=true is reqired with this flag
-	AutoTag    bool     // enable plugin to auto tag the docker image via commit or tag
-}
-
-// env struct represents the environment variables the CI gives you for free
-type env struct {
-	BuildEvent  string
-	BuildCommit string
-	BuildTag    string
-}
-
-const conf = `{
-  "auths": {
-    "%s": {
-      "auth": "%s"
-    }
-  }
-}`
-
 func main() {
 	app := cli.NewApp()
-	app.Name = "docker"
-	app.Usage = "Docker plugin for building docker images"
-	app.Action = setup
+
+	// Plugin Information
+
+	app.Name = "vela-docker"
+	app.HelpName = "vela-docker"
+	app.Usage = "Vela Docker plugin for building and publishing images"
+	app.Copyright = "Copyright (c) 2019 Target Brands, Inc. All rights reserved."
+	app.Authors = []cli.Author{
+		{
+			Name:  "Vela Admins",
+			Email: "vela@target.com",
+		},
+	}
+
+	// Plugin Metadata
+
+	app.Compiled = time.Now()
+	app.Action = run
+
+	// Plugin Flags
+
 	app.Flags = []cli.Flag{
 
-		// Required flags
 		cli.StringFlag{
-			Name:   "registry",
-			EnvVar: "PARAMETER_REGISTRY,DOCKER_REGISTRY",
-		},
-		cli.StringFlag{
-			Name:   "repo",
-			EnvVar: "PARAMETER_REPO,DOCKER_REPO",
-		},
-		cli.StringSliceFlag{
-			Name:   "tags",
-			EnvVar: "PARAMETER_TAGS,DOCKER_TAGS",
-		},
-
-		// Authentication Flags
-		cli.StringFlag{
-			Name:   "username",
-			EnvVar: "PARAMETER_USERNAME,DOCKER_USERNAME",
-		},
-		cli.StringFlag{
-			Name:   "password",
-			EnvVar: "PARAMETER_PASSWORD,DOCKER_PASSWORD",
-		},
-
-		// Optional flags
-		cli.StringFlag{
-			Name:   "dockerfile",
-			EnvVar: "PARAMETER_DOCKERFILE,DOCKER_DOCKERFILE",
-		},
-		cli.BoolFlag{
-			Name:   "dry-run",
-			EnvVar: "PARAMETER_DRY_RUN,DOCKER_DRY_RUN",
-		},
-		cli.StringFlag{
-			Name:   "context",
-			EnvVar: "PARAMETER_CONTEXT,DOCKER_CONTEXT",
-		},
-		cli.StringSliceFlag{
-			Name:   "build-args",
-			EnvVar: "PARAMETER_BUILD_ARGS,DOCKER_BUILD_ARGS",
-		},
-		cli.StringFlag{
-			Name:   "log-level",
-			Usage:  "valid values: panic|fatal|error|warn|info|debug",
-			EnvVar: "PARAMETER_LOG_LEVEL,DOCKER_LOG_LEVEL",
+			EnvVar: "PARAMETER_LOG_LEVEL,VELA_LOG_LEVEL,DOCKER_LOG_LEVEL",
+			Name:   "log.level",
+			Usage:  "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
 			Value:  "info",
 		},
-		cli.BoolFlag{
-			Name:   "cache",
-			EnvVar: "PARAMETER_CACHE,DOCKER_CACHE",
+
+		// Build Flags
+
+		cli.StringFlag{
+			EnvVar: "PARAMETER_EVENT,BUILD_EVENT",
+			Name:   "build.event",
+			Usage:  "event triggered for build",
 		},
 		cli.StringFlag{
-			Name:   "cache-repo",
-			EnvVar: "PARAMETER_CACHE_REPO,DOCKER_CACHE_REPO",
+			EnvVar: "PARAMETER_SHA,BUILD_COMMIT",
+			Name:   "build.sha",
+			Usage:  "commit SHA-1 hash for build",
 		},
-		cli.BoolFlag{
-			Name:   "auto-tag",
-			EnvVar: "PARAMETER_AUTO_TAG,DOCKER_AUTO_TAG",
+		cli.StringFlag{
+			EnvVar: "PARAMETER_TAG,BUILD_TAG",
+			Name:   "build.tag",
+			Usage:  "full tag reference for build (only populated for tag events)",
 		},
 
-		// These fields are passed into the environment via the default environment variables
-		cli.StringFlag{
-			Name:   "build-event",
-			EnvVar: "BUILD_EVENT",
+		// Image Flags
+
+		cli.StringSliceFlag{
+			EnvVar: "PARAMETER_BUILD_ARGS,IMAGE_BUILD_ARGS",
+			Name:   "image.build_args",
+			Usage:  "variables passed to the image at build-time",
 		},
 		cli.StringFlag{
-			Name:   "build-commit",
-			EnvVar: "BUILD_COMMIT",
+			EnvVar: "PARAMETER_CONTEXT,IMAGE_CONTEXT",
+			Name:   "image.context",
+			Usage:  "path on local filesystem for building image from",
+			Value:  ".",
 		},
 		cli.StringFlag{
-			Name:   "build-tag",
-			EnvVar: "BUILD_TAG",
+			EnvVar: "PARAMETER_DOCKERFILE,IMAGE_DOCKERFILE",
+			Name:   "image.dockerfile",
+			Usage:  "path to text file with build instructions",
+			Value:  "Dockerfile",
+		},
+
+		// Registry Flags
+
+		cli.BoolFlag{
+			EnvVar: "PARAMETER_DRY_RUN,REGISTRY_DRY_RUN",
+			Name:   "registry.dry_run",
+			Usage:  "enables building images without publishing to the registry",
+		},
+		cli.StringFlag{
+			EnvVar: "PARAMETER_REGISTRY,REGISTRY_NAME",
+			Name:   "registry.name",
+			Usage:  "Docker registry name to communicate with",
+			Value:  "index.docker.io",
+		},
+		cli.StringFlag{
+			EnvVar: "PARAMETER_USERNAME,REGISTRY_USERNAME,DOCKER_USERNAME",
+			Name:   "registry.username",
+			Usage:  "user name for communication with the registry",
+		},
+		cli.StringFlag{
+			EnvVar: "PARAMETER_PASSWORD,REGISTRY_PASSWORD,DOCKER_PASSWORD",
+			Name:   "registry.password",
+			Usage:  "password for communication with the registry",
+		},
+
+		// Repo Flags
+
+		cli.BoolFlag{
+			EnvVar: "PARAMETER_AUTO_TAG,REPO_AUTO_TAG",
+			Name:   "repo.auto_tag",
+			Usage:  "enables automatically providing tags for the image",
+		},
+		cli.BoolFlag{
+			EnvVar: "PARAMETER_CACHE,REPO_CACHE",
+			Name:   "repo.cache",
+			Usage:  "enables caching of each layer for the image",
+		},
+		cli.StringFlag{
+			EnvVar: "PARAMETER_CACHE_REPO,REPO_CACHE_NAME",
+			Name:   "repo.cache_name",
+			Usage:  "enables caching of each layer for a specific repo for the image",
+		},
+		cli.StringFlag{
+			EnvVar: "PARAMETER_REPO,REPO_NAME",
+			Name:   "repo.name",
+			Usage:  "repository name for the image",
+		},
+		cli.StringSliceFlag{
+			EnvVar:   "PARAMETER_TAGS,REPO_TAGS",
+			FilePath: ".tags",
+			Name:     "repo.tags",
+			Usage:    "repository tags of the image",
+			Value:    &cli.StringSlice{"latest"},
 		},
 	}
 
@@ -132,67 +144,65 @@ func main() {
 	}
 }
 
-// helper function used as entrypoint of plugin execution
-func setup(c *cli.Context) error {
-
-	// set application log information
-	if c.String("debug") != "info" {
+// run executes the plugin based off the configuration provided.
+func run(c *cli.Context) error {
+	// set the log level for the plugin
+	switch c.String("log.level") {
+	case "t", "trace", "Trace", "TRACE":
+		logrus.SetLevel(logrus.TraceLevel)
+	case "d", "debug", "Debug", "DEBUG":
 		logrus.SetLevel(logrus.DebugLevel)
-	} else {
+	case "w", "warn", "Warn", "WARN":
+		logrus.SetLevel(logrus.WarnLevel)
+	case "e", "error", "Error", "ERROR":
+		logrus.SetLevel(logrus.ErrorLevel)
+	case "f", "fatal", "Fatal", "FATAL":
+		logrus.SetLevel(logrus.FatalLevel)
+	case "p", "panic", "Panic", "PANIC":
+		logrus.SetLevel(logrus.PanicLevel)
+	case "i", "info", "Info", "INFO":
+		fallthrough
+	default:
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 
-	// read plugin from context into plugin struct
-	p := plugin{
-		Registry:   c.String("registry"),
-		Repo:       c.String("repo"),
-		Tags:       c.StringSlice("tags"),
-		Username:   c.String("username"),
-		Password:   c.String("password"),
-		Dockerfile: c.String("dockerfile"),
-		DryRun:     c.Bool("dry-run"),
-		Context:    c.String("context"),
-		BuildArgs:  c.StringSlice("build-args"),
-		LogLevel:   c.String("log-level"),
-		Cache:      c.Bool("cache"),
-		CacheRepo:  c.String("cache-repo"),
-		AutoTag:    c.Bool("auto-tag"),
+	// create the plugin
+	p := &Plugin{
+		// build configuration
+		Build: &Build{
+			Event: c.String("build.event"),
+			Sha:   c.String("build.sha"),
+			Tag:   c.String("build.tag"),
+		},
+		// image configuration
+		Image: &Image{
+			Args:       c.StringSlice("image.build_args"),
+			Context:    c.String("image.context"),
+			Dockerfile: c.String("image.dockerfile"),
+		},
+		// registry configuration
+		Registry: &Registry{
+			DryRun:   c.Bool("registry.dry_run"),
+			Name:     c.String("registry.name"),
+			Username: c.String("registry.username"),
+			Password: c.String("registry.password"),
+		},
+		// repo configuration
+		Repo: &Repo{
+			AutoTag:   c.Bool("repo.auto_tag"),
+			Cache:     c.Bool("repo.cache"),
+			CacheName: c.String("repo.cache_name"),
+			Name:      c.String("repo.name"),
+			Tags:      c.StringSlice("repo.tags"),
+		},
 	}
 
-	// read environment from context into env struct
-	env := env{
-		BuildEvent:  c.String("build-event"),
-		BuildCommit: c.String("build-commit"),
-		BuildTag:    c.String("build-tag"),
-	}
-
-	// check plugin configuration has proper fields
-	logrus.Info("Validating plugin configuration....")
-	err := validate(&env, &p)
+	// validate the plugin
+	err := p.Validate()
 	if err != nil {
 		return err
 	}
-	logrus.Info("Configuration is valid...")
 
-	// Write docker config to kaniko directory with registry credentials
-	logrus.Info("Creating docker config with credentials...")
-	err = dockerConf(p)
-	if err != nil {
-		return err
-	}
-	logrus.Info("Credentials created...")
-
-	// convert the plugin configuration into kaniko CLI flags
-	logrus.Info("Build Kaniko flags from provided plugin configuration...")
-	flags := buildCommand(p)
-	logrus.Info("Kaniko flags built...")
-
-	logrus.Info("Execute kaniko docker plugin...")
-	err = run(flags)
-	if err != nil {
-		return err
-	}
-	logrus.Info("Plugin finished...")
-
-	return nil
+	// execute the plugin
+	return p.Exec()
 }
