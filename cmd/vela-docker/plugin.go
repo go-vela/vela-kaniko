@@ -31,6 +31,51 @@ type Plugin struct {
 	Repo *Repo
 }
 
+// Flags formats and outputs the flags necessary for
+// Kaniko to build and publish a Docker image.
+func (p *Plugin) Flags() []string {
+	var flags []string
+
+	for _, arg := range p.Image.Args {
+		flags = append(flags, fmt.Sprintf("--build-arg=%s", arg))
+	}
+
+	if p.Repo.Cache {
+		flags = append(flags, fmt.Sprint("--cache"))
+
+		if len(p.Repo.CacheName) > 0 {
+			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.CacheName))
+		} else {
+			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.Name))
+		}
+	}
+
+	flags = append(flags, fmt.Sprintf("--context=%s", p.Image.Context))
+
+	if p.Repo.AutoTag {
+		switch p.Build.Event {
+		case "tag":
+			p.Repo.Tags = append(p.Repo.Tags, p.Build.Tag)
+		default:
+			p.Repo.Tags = append(p.Repo.Tags, p.Build.Sha)
+		}
+	}
+
+	for _, tag := range p.Repo.Tags {
+		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo.Name, tag))
+	}
+
+	flags = append(flags, fmt.Sprintf("--dockerfile=%s", p.Image.Dockerfile))
+
+	if p.Registry.DryRun {
+		flags = append(flags, fmt.Sprint("--no-push"))
+	}
+
+	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
+
+	return flags
+}
+
 // Exec formats and runs the commands for building and publishing a Docker image.
 func (p *Plugin) Exec() error {
 	return nil
@@ -65,57 +110,6 @@ func (p *Plugin) Validate() error {
 	}
 
 	return nil
-}
-
-// helper function to convert the plugin configuration into kaniko CLI flags
-func buildCommand(p *Plugin) []string {
-
-	flags := []string{}
-
-	// get the working directory for context
-	dir, err := os.Getwd()
-	if err != nil {
-		return nil
-	}
-
-	// Add required and default fields to kaniko command
-	logrus.Debug("...add required kaniko flags")
-	for _, tag := range p.Repo.Tags {
-		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo.Name, tag))
-	}
-
-	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
-	if len(p.Image.Context) != 0 {
-		flags = append(flags, fmt.Sprintf("--context=%s/%s", dir, p.Image.Context))
-	} else if dir != "/" {
-		flags = append(flags, fmt.Sprintf("--context=%s", dir))
-	}
-
-	// handle adding optional fields to kaniko commands
-	logrus.Debug("...add optional kaniko flags")
-	if len(p.Image.Dockerfile) != 0 {
-		flags = append(flags, fmt.Sprintf("--dockerfile=%s", p.Image.Dockerfile))
-	}
-	if p.Registry.DryRun {
-		flags = append(flags, fmt.Sprint("--no-push"))
-	}
-	if len(p.Image.Args) != 0 {
-		for _, arg := range p.Image.Args {
-			flags = append(flags, fmt.Sprintf("--build-arg=%s", arg))
-		}
-	}
-	if p.Repo.Cache {
-		flags = append(flags, fmt.Sprint("--cache"))
-		if len(p.Repo.CacheName) != 0 {
-			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.CacheName))
-		} else {
-			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.Name))
-		}
-	}
-
-	logrus.Debugf("...flags added %+v", flags)
-
-	return flags
 }
 
 // helper function to run the kaniko binary against provided plugin configuration
