@@ -13,38 +13,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-// plugin struct represents fields user can present to plugin
-type plugin struct {
-	Registry   string   // registry you plan to upload docker image
-	Repo       string   // repository name for the image
-	Tags       []string // repository tag for the image
-	Username   string   // authenticates with this username
-	Password   string   // authenticates with this password
-	Dockerfile string   // dockerfile to be used, defaults to Dockerfile
-	DryRun     bool     // boolean if the docker image should be pushed at the end
-	Context    string   // the context path to use, defaults to root of the git repo
-	BuildArgs  []string // custom arguments passed to docker build
-	LogLevel   string   // enable verbose logs on plugin
-	Cache      bool     // enable docker image layer caching
-	CacheRepo  string   // enable docker image layer caching for a specific repo, note cache=true is reqired with this flag
-	AutoTag    bool     // enable plugin to auto tag the docker image via commit or tag
-}
-
-// env struct represents the environment variables the CI gives you for free
-type env struct {
-	BuildEvent  string
-	BuildCommit string
-	BuildTag    string
-}
-
-const conf = `{
-  "auths": {
-    "%s": {
-      "auth": "%s"
-    }
-  }
-}`
-
 func main() {
 	app := cli.NewApp()
 
