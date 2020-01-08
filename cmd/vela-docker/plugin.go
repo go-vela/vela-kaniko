@@ -130,7 +130,7 @@ func buildCommand(p plugin) []string {
 }
 
 // helper function to run the kaniko binary against provided plugin configuration
-func run(flags []string) error {
+func kaniko(flags []string) error {
 
 	cmd := exec.Command("/kaniko/executor", flags...)
 	var stdoutBuf, stderrBuf bytes.Buffer
