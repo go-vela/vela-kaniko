@@ -5,12 +5,8 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"io"
-	"os"
 	"os/exec"
-	"sync"
 
 	"github.com/spf13/afero"
 
@@ -31,9 +27,9 @@ type Plugin struct {
 	Repo *Repo
 }
 
-// Flags formats and outputs the flags necessary for
+// Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
-func (p *Plugin) Flags() []string {
+func (p *Plugin) Command() *exec.Cmd {
 	var flags []string
 
 	for _, arg := range p.Image.Args {
@@ -73,11 +69,23 @@ func (p *Plugin) Flags() []string {
 
 	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
 
-	return flags
+	return exec.Command(kanikoBin, flags...)
 }
 
 // Exec formats and runs the commands for building and publishing a Docker image.
 func (p *Plugin) Exec() error {
+	logrus.Debug("running plugin with provided configuration")
+
+	err := p.Registry.Write()
+	if err != nil {
+		return err
+	}
+
+	err = execCmd(p.Command())
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -107,46 +115,6 @@ func (p *Plugin) Validate() error {
 	err = p.Repo.Validate()
 	if err != nil {
 		return err
-	}
-
-	return nil
-}
-
-// helper function to run the kaniko binary against provided plugin configuration
-func kaniko(flags []string) error {
-
-	cmd := exec.Command("/kaniko/executor", flags...)
-	var stdoutBuf, stderrBuf bytes.Buffer
-	stdoutIn, _ := cmd.StdoutPipe()
-	stderrIn, _ := cmd.StderrPipe()
-
-	var errStdout, errStderr error
-	stdout := io.MultiWriter(os.Stdout, &stdoutBuf)
-	stderr := io.MultiWriter(os.Stderr, &stderrBuf)
-
-	err := cmd.Start()
-	if err != nil {
-		return fmt.Errorf("Error: %s", err)
-	}
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-
-	go func() {
-		_, errStdout = io.Copy(stdout, stdoutIn)
-		wg.Done()
-	}()
-
-	_, errStderr = io.Copy(stderr, stderrIn)
-	wg.Wait()
-
-	err = cmd.Wait()
-	if err != nil {
-		return fmt.Errorf("Error: %s", err)
-	}
-
-	if errStdout != nil || errStderr != nil {
-		return fmt.Errorf("Error: %s", err)
 	}
 
 	return nil
