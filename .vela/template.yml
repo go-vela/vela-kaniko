@@ -1,0 +1,53 @@
+# Copyright (c) 2019 Target Brands, Inc. All rights reserved.
+#
+# Use of this source code is governed by the LICENSE file in this repository.
+
+## Template Variables
+# - .image      (default: "target/vela-docker:latest")
+# - .pull       (default: true)
+# - .log_level  (default: "info")
+# - .auto_tag   (default: false)
+# - .build_args (default: [])
+# - .cache      (default: false)
+# - .cache_repo (default: "")
+# - .context    (default: ".")
+# - .dockerfile (default: "Dockerfile")
+# - .dry_run    (default: false)
+# - .registry   (default: "")
+# - .repo       (default: "")
+# - .tags       (default: "")
+
+## Set Default Template Variables
+{{ default "target/vela-docker:latest" .image }}
+{{ default "true" .pull }}
+{{ default "info" .log_level }}
+{{ default "false" .auto_tag }}
+{{ default "[]" .build_args }}
+{{ default "false" .cache }}
+{{ default "" .cache_repo }}
+{{ default "." .context }}
+{{ default "Dockerfile" .dockerfile }}
+{{ default "false" .dry_run }}
+{{ default "index.docker.io" .registry }}
+{{ default "" .repo }}
+{{ default "[ latest ]" .tags }}
+
+metadata:
+  template: true
+
+steps:
+  - name: docker_plugin
+    image: {{ .image }}
+    pull: {{ .pull }}
+    parameters:
+      log_level: {{ .log_level }}
+      auto_tag: {{ .auto_tag }}
+      build_args: {{ .build_args }}
+      cache: {{ .cache }}
+      cache_repo: {{ .cache_repo }}
+      context: {{ .context }}
+      dockerfile: {{ .dockerfile }}
+      dry_run: {{ .dry_run }}
+      registry: {{ .registry }}
+      repo: {{ .repo }}
+      tags: {{ .tags }}
