@@ -4,7 +4,9 @@
 [![Go Report Card](https://goreportcard.com/badge/go-vela/vela-docker)](https://goreportcard.com/report/go-vela/vela-docker)
 [![codecov](https://codecov.io/gh/go-vela/vela-docker/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-docker)
 
-Vela plugin designed for building and pushing [Docker](https://www.docker.com/) images. Internally, the plugin is a wrapper around the [Kaniko](https://github.com/GoogleContainerTools/kaniko) CLI.
+Vela plugin designed for building and publishing [Docker](https://www.docker.com/) images.
+
+Internally, the plugin is a wrapper around the [kaniko](https://github.com/GoogleContainerTools/kaniko) CLI.
 
 ## Documentation
 
