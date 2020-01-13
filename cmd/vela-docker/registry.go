@@ -43,24 +43,29 @@ type Registry struct {
 func (r *Registry) Write() error {
 	logrus.Trace("writing registry configuration file")
 
+	// use custom filesystem which enables us to test
 	a := &afero.Afero{
 		Fs: appFS,
 	}
 
+	// check if name, username and password are provided
 	if len(r.Name) == 0 || len(r.Username) == 0 || len(r.Password) == 0 {
 		return nil
 	}
 
+	// create basic authentication string for config.json file
 	basicAuth := base64.StdEncoding.EncodeToString(
 		[]byte(fmt.Sprintf(credentials, r.Username, r.Password)),
 	)
 
+	// create output string for config.json file
 	out := fmt.Sprintf(
 		registryFile,
 		r.Name,
 		basicAuth,
 	)
 
+	// create full path for config.json file
 	path := "/kaniko/.docker/config.json"
 
 	return a.WriteFile(path, []byte(out), 0644)
@@ -70,15 +75,19 @@ func (r *Registry) Write() error {
 func (r *Registry) Validate() error {
 	logrus.Trace("validating registry plugin configuration")
 
+	// verify registry is provided
 	if len(r.Name) == 0 {
 		return fmt.Errorf("no registry name provided")
 	}
 
+	// check if dry run is disabled
 	if !r.DryRun {
+		// check if username is provided
 		if len(r.Username) == 0 {
 			return fmt.Errorf("no registry username provided")
 		}
 
+		// check if password is provided
 		if len(r.Password) == 0 {
 			return fmt.Errorf("no registry password provided")
 		}
