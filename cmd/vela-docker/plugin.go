@@ -30,7 +30,7 @@ type Plugin struct {
 // Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
 func (p *Plugin) Command() *exec.Cmd {
-	logrus.Debug("gathering kaniko command from plugin configuration")
+	logrus.Debug("creating kaniko command from plugin configuration")
 
 	var flags []string
 
