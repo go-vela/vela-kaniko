@@ -11,6 +11,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
