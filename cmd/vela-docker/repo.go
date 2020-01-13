@@ -29,23 +29,30 @@ type Repo struct {
 func (r *Repo) Validate() error {
 	logrus.Trace("validating repo plugin configuration")
 
+	// check if cache name is provided
 	if len(r.CacheName) > 0 {
+		// verify caching is enabled
 		if !r.Cache {
 			return fmt.Errorf("cache not set for cache repo: %s", r.CacheName)
 		}
 	}
 
+	// verify repo is provided
 	if len(r.Name) == 0 {
 		return fmt.Errorf("no repo name provided")
 	}
 
+	// check if auto tagging is disabled
 	if !r.AutoTag {
+		// verify tags are provided
 		if len(r.Tags) == 0 {
 			return fmt.Errorf("no repo tags provided")
 		}
 	}
 
+	// check if tags are provided
 	if len(r.Tags) > 0 {
+		// create regular expression for verifying tags
 		re := regexp.MustCompile(`^[A-Za-z0-9\-\.\_]*$`)
 
 		// check each tag value for valid docker tag syntax

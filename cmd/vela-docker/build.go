@@ -24,10 +24,12 @@ type Build struct {
 func (b *Build) Validate() error {
 	logrus.Trace("validating build plugin configuration")
 
+	// verify event is provided
 	if len(b.Event) == 0 {
 		return fmt.Errorf("no build event provided")
 	}
 
+	// verify sha is provided
 	if len(b.Sha) == 0 {
 		return fmt.Errorf("no build sha provided")
 	}

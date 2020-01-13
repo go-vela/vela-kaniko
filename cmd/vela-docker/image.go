@@ -24,10 +24,12 @@ type Image struct {
 func (i *Image) Validate() error {
 	logrus.Trace("validating image plugin configuration")
 
+	// verify context is provided
 	if len(i.Context) == 0 {
 		return fmt.Errorf("no image context provided")
 	}
 
+	// verify dockerfile is provided
 	if len(i.Dockerfile) == 0 {
 		return fmt.Errorf("no image dockerfile provided")
 	}
