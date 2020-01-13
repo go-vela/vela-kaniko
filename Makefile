@@ -42,34 +42,34 @@ docker-build:
 docker-run:
 
 	docker run --rm \
-		-e BUILD_EVENT \
 		-e BUILD_COMMIT \
+		-e BUILD_EVENT \
 		-e BUILD_TAG \
+		-e DOCKER_USERNAME \
+		-e DOCKER_PASSWORD \
+		-e PARAMETER_AUTO_TAG \
+		-e PARAMETER_BUILD_ARGS \
+		-e PARAMETER_CACHE \
+		-e PARAMETER_CACHE_REPO \
+		-e PARAMETER_CONTEXT \
+		-e PARAMETER_DOCKERFILE \
+		-e PARAMETER_DRY_RUN \
 		-e PARAMETER_REGISTRY \
 		-e PARAMETER_REPO \
 		-e PARAMETER_TAGS \
-		-e PARAMETER_USERNAME \
-		-e PARAMETER_PASSWORD \
-		-e PARAMETER_DOCKERFILE \
-		-e PARAMETER_DRY_RUN \
-		-e PARAMETER_CONTEXT \
-		-e PARAMETER_BUILD_ARGS \
-		-e PARAMETER_LOG_LEVEL \
-		-e PARAMETER_CACHE \
-		-e PARAMETER_CACHE_REPO \
-		-e PARAMETER_AUTO_TAG \
-		-v $(pwd):/workspace
+		-v $(shell pwd):/workspace \
 		vela-docker:local
 
 docker-example:
 
 	docker run --rm \
-	-e BUILD_COMMIT=123abcdefg
-	-e BUILD_EVENT=push
-	-e PARAMETER_REGISTRY=index.docker.io
-	-e PARAMETER_REPO=index.docker.io/target/vela-docker
-	-e PARAMETER_TAGS=latest
-	-e PARAMETER_USERNAME
-	-e PARAMETER_PASSWORD
-	-v $(pwd):/workspace
-	vela-docker:local
+		-e BUILD_COMMIT=123abcdefg \
+		-e BUILD_EVENT=push \
+		-e PARAMETER_CONTEXT=/workspace/ \
+		-e PARAMETER_DOCKERFILE=Dockerfile.example \
+		-e PARAMETER_DRY_RUN=true \
+		-e PARAMETER_REGISTRY=index.docker.io \
+		-e PARAMETER_REPO=index.docker.io/target/vela-docker \
+		-e PARAMETER_TAGS=latest \
+		-v $(shell pwd):/workspace \
+		vela-docker:local
