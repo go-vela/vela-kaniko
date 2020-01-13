@@ -41,6 +41,8 @@ type Registry struct {
 
 // Write creates a Docker config.json file for building and publishing the image.
 func (r *Registry) Write() error {
+	logrus.Trace("writing registry configuration file")
+
 	a := &afero.Afero{
 		Fs: appFS,
 	}
