@@ -17,37 +17,22 @@
 # - .repo       (default: "")
 # - .tags       (default: "")
 
-## Set Default Template Variables
-{{ default "target/vela-docker:latest" .image }}
-{{ default "true" .pull }}
-{{ default "info" .log_level }}
-{{ default "false" .auto_tag }}
-{{ default "[]" .build_args }}
-{{ default "false" .cache }}
-{{ default "" .cache_repo }}
-{{ default "." .context }}
-{{ default "Dockerfile" .dockerfile }}
-{{ default "false" .dry_run }}
-{{ default "index.docker.io" .registry }}
-{{ default "" .repo }}
-{{ default "[ latest ]" .tags }}
-
 metadata:
   template: true
 
 steps:
-  - name: docker_plugin
-    image: {{ .image }}
-    pull: {{ .pull }}
+  - name: docker_plugin_template
+    image: {{ default "target/vela-docker:latest" .image }}
+    pull: {{ default "true" .pull }}
     parameters:
-      log_level: {{ .log_level }}
-      auto_tag: {{ .auto_tag }}
-      build_args: {{ .build_args }}
-      cache: {{ .cache }}
-      cache_repo: {{ .cache_repo }}
-      context: {{ .context }}
-      dockerfile: {{ .dockerfile }}
-      dry_run: {{ .dry_run }}
-      registry: {{ .registry }}
-      repo: {{ .repo }}
-      tags: {{ .tags }}
+      log_level: {{ default "info" .log_level }}
+      auto_tag: {{ default "false" .auto_tag }}
+      build_args: {{ default "[]" .build_args }}
+      cache: {{ default "false" .cache }}
+      cache_repo: {{ default "" .cache_repo }}
+      context: {{ default "." .context }}
+      dockerfile: {{ default "Dockerfile" .dockerfile }}
+      dry_run: {{ default "false" .dry_run }}
+      registry: {{ default "index.docker.io" .registry }}
+      repo: {{ default "" .repo }}
+      tags: {{ default "[ latest ]" .tags }}
