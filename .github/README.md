@@ -1,5 +1,6 @@
 # vela-docker
 
+[![license](https://img.shields.io/crates/l/gl.svg)](../LICENSE)
 [![GoDoc](https://godoc.org/github.com/go-vela/vela-docker?status.svg)](https://godoc.org/github.com/go-vela/vela-docker)
 [![Go Report Card](https://goreportcard.com/badge/go-vela/vela-docker)](https://goreportcard.com/report/go-vela/vela-docker)
 [![codecov](https://codecov.io/gh/go-vela/vela-docker/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-docker)
@@ -30,4 +31,4 @@ Please see our [support](SUPPORT.md) documentation for further instructions.
 Copyright (c) 2020 Target Brands, Inc.
 ```
 
-[![license](https://img.shields.io/crates/l/gl.svg)](LICENSE)
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
