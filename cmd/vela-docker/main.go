@@ -169,9 +169,9 @@ func run(c *cli.Context) error {
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"code": "https://github.com/go-vela/vela-docker",
-		"docs": "https://go-vela.github.io/docs/plugins/registry/docker",
-		"time": time.Now(),
+		"code":     "https://github.com/go-vela/vela-docker",
+		"docs":     "https://go-vela.github.io/docs/plugins/registry/docker",
+		"registry": "https://hub.docker.com/r/target/vela-docker",
 	}).Info("Vela Docker Plugin")
 
 	// create the plugin
