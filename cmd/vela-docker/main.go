@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -24,7 +24,7 @@ func main() {
 	app.HelpName = "vela-docker"
 	app.Usage = "Vela Docker plugin for building and publishing images"
 	app.Copyright = "Copyright (c) 2020 Target Brands, Inc. All rights reserved."
-	app.Authors = []cli.Author{
+	app.Authors = []*cli.Author{
 		{
 			Name:  "Vela Admins",
 			Email: "vela@target.com",
@@ -40,103 +40,103 @@ func main() {
 
 	app.Flags = []cli.Flag{
 
-		cli.StringFlag{
-			EnvVar: "PARAMETER_LOG_LEVEL,VELA_LOG_LEVEL,DOCKER_LOG_LEVEL",
-			Name:   "log.level",
-			Usage:  "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
-			Value:  "info",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_LOG_LEVEL", "VELA_LOG_LEVEL", "DOCKER_LOG_LEVEL"},
+			Name:    "log.level",
+			Usage:   "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
+			Value:   "info",
 		},
 
 		// Build Flags
 
-		cli.StringFlag{
-			EnvVar: "PARAMETER_EVENT,BUILD_EVENT",
-			Name:   "build.event",
-			Usage:  "event triggered for build",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_EVENT", "BUILD_EVENT"},
+			Name:    "build.event",
+			Usage:   "event triggered for build",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_SHA,BUILD_COMMIT",
-			Name:   "build.sha",
-			Usage:  "commit SHA-1 hash for build",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_SHA", "BUILD_COMMIT"},
+			Name:    "build.sha",
+			Usage:   "commit SHA-1 hash for build",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_TAG,BUILD_TAG",
-			Name:   "build.tag",
-			Usage:  "full tag reference for build (only populated for tag events)",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_TAG", "BUILD_TAG"},
+			Name:    "build.tag",
+			Usage:   "full tag reference for build (only populated for tag events)",
 		},
 
 		// Image Flags
 
-		cli.StringSliceFlag{
-			EnvVar: "PARAMETER_BUILD_ARGS,IMAGE_BUILD_ARGS",
-			Name:   "image.build_args",
-			Usage:  "variables passed to the image at build-time",
+		&cli.StringSliceFlag{
+			EnvVars: []string{"PARAMETER_BUILD_ARGS", "IMAGE_BUILD_ARGS"},
+			Name:    "image.build_args",
+			Usage:   "variables passed to the image at build-time",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_CONTEXT,IMAGE_CONTEXT",
-			Name:   "image.context",
-			Usage:  "path on local filesystem for building image from",
-			Value:  ".",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_CONTEXT", "IMAGE_CONTEXT"},
+			Name:    "image.context",
+			Usage:   "path on local filesystem for building image from",
+			Value:   ".",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_DOCKERFILE,IMAGE_DOCKERFILE",
-			Name:   "image.dockerfile",
-			Usage:  "path to text file with build instructions",
-			Value:  "Dockerfile",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_DOCKERFILE", "IMAGE_DOCKERFILE"},
+			Name:    "image.dockerfile",
+			Usage:   "path to text file with build instructions",
+			Value:   "Dockerfile",
 		},
 
 		// Registry Flags
 
-		cli.BoolFlag{
-			EnvVar: "PARAMETER_DRY_RUN,REGISTRY_DRY_RUN",
-			Name:   "registry.dry_run",
-			Usage:  "enables building images without publishing to the registry",
+		&cli.BoolFlag{
+			EnvVars: []string{"PARAMETER_DRY_RUN", "REGISTRY_DRY_RUN"},
+			Name:    "registry.dry_run",
+			Usage:   "enables building images without publishing to the registry",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_REGISTRY,REGISTRY_NAME",
-			Name:   "registry.name",
-			Usage:  "Docker registry name to communicate with",
-			Value:  "index.docker.io",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_REGISTRY", "REGISTRY_NAME"},
+			Name:    "registry.name",
+			Usage:   "Docker registry name to communicate with",
+			Value:   "index.docker.io",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_USERNAME,REGISTRY_USERNAME,DOCKER_USERNAME",
-			Name:   "registry.username",
-			Usage:  "user name for communication with the registry",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_USERNAME", "REGISTRY_USERNAME", "DOCKER_USERNAME"},
+			Name:    "registry.username",
+			Usage:   "user name for communication with the registry",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_PASSWORD,REGISTRY_PASSWORD,DOCKER_PASSWORD",
-			Name:   "registry.password",
-			Usage:  "password for communication with the registry",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_PASSWORD", "REGISTRY_PASSWORD", "DOCKER_PASSWORD"},
+			Name:    "registry.password",
+			Usage:   "password for communication with the registry",
 		},
 
 		// Repo Flags
 
-		cli.BoolFlag{
-			EnvVar: "PARAMETER_AUTO_TAG,REPO_AUTO_TAG",
-			Name:   "repo.auto_tag",
-			Usage:  "enables automatically providing tags for the image",
+		&cli.BoolFlag{
+			EnvVars: []string{"PARAMETER_AUTO_TAG", "REPO_AUTO_TAG"},
+			Name:    "repo.auto_tag",
+			Usage:   "enables automatically providing tags for the image",
 		},
-		cli.BoolFlag{
-			EnvVar: "PARAMETER_CACHE,REPO_CACHE",
-			Name:   "repo.cache",
-			Usage:  "enables caching of each layer for the image",
+		&cli.BoolFlag{
+			EnvVars: []string{"PARAMETER_CACHE", "REPO_CACHE"},
+			Name:    "repo.cache",
+			Usage:   "enables caching of each layer for the image",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_CACHE_REPO,REPO_CACHE_NAME",
-			Name:   "repo.cache_name",
-			Usage:  "enables caching of each layer for a specific repo for the image",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_CACHE_REPO", "REPO_CACHE_NAME"},
+			Name:    "repo.cache_name",
+			Usage:   "enables caching of each layer for a specific repo for the image",
 		},
-		cli.StringFlag{
-			EnvVar: "PARAMETER_REPO,REPO_NAME",
-			Name:   "repo.name",
-			Usage:  "repository name for the image",
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_REPO", "REPO_NAME"},
+			Name:    "repo.name",
+			Usage:   "repository name for the image",
 		},
-		cli.StringSliceFlag{
-			EnvVar:   "PARAMETER_TAGS,REPO_TAGS",
+		&cli.StringSliceFlag{
+			EnvVars:  []string{"PARAMETER_TAGS", "REPO_TAGS"},
 			FilePath: ".tags",
 			Name:     "repo.tags",
 			Usage:    "repository tags of the image",
-			Value:    &cli.StringSlice{"latest"},
+			Value:    cli.NewStringSlice("latest"),
 		},
 	}
 
