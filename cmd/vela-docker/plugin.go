@@ -87,6 +87,12 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprint("--no-push"))
 	}
 
+	// check if the image target is set
+	if len(p.Image.Target) > 0 {
+		// add flag for build stage target from provided image target
+		flags = append(flags, fmt.Sprintf("--target=%s", p.Image.Target))
+	}
+
 	// add flag for logging verbosity
 	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
 
