@@ -23,6 +23,8 @@ type Repo struct {
 	Name string
 	// tags of the image for the repository
 	Tags []string
+	// labels of the image for the repository
+	Labels []string
 }
 
 // Validate verifies the Repo is properly configured.

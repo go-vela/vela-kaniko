@@ -78,6 +78,12 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo.Name, tag))
 	}
 
+	// iterate through all repo labels
+	for _, label := range p.Repo.Labels {
+		// add flag for tag from provided repo tag
+		flags = append(flags, fmt.Sprintf("--label=%s", label))
+	}
+
 	// add flag for dockerfile from provided image dockerfile
 	flags = append(flags, fmt.Sprintf("--dockerfile=%s", p.Image.Dockerfile))
 

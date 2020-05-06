@@ -136,6 +136,57 @@ func TestDocker_Plugin_Command(t *testing.T) {
 	}
 }
 
+func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
+	// setup types
+	p := &Plugin{
+		Build: &Build{
+			Event: "tag",
+			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:   "v0.0.0",
+		},
+		Image: &Image{
+			Args:       []string{"foo=bar"},
+			Context:    ".",
+			Dockerfile: "Dockerfile",
+		},
+		Registry: &Registry{
+			Name:     "index.docker.io",
+			Username: "octocat",
+			Password: "superSecretPassword",
+			DryRun:   true,
+		},
+		Repo: &Repo{
+			Cache:     true,
+			CacheName: "index.docker.io/target/vela-docker",
+			Name:      "index.docker.io/target/vela-docker",
+			Tags:      []string{"latest"},
+			AutoTag:   true,
+			Labels:    []string{"key1=tag1"},
+		},
+	}
+
+	want := exec.Command(
+		kanikoBin,
+		"--build-arg=foo=bar",
+		"--cache",
+		"--cache-repo=index.docker.io/target/vela-docker",
+		"--context=.",
+		"--destination=index.docker.io/target/vela-docker:latest",
+		"--destination=index.docker.io/target/vela-docker:v0.0.0",
+		"--label=key1=tag1",
+		"--dockerfile=Dockerfile",
+		"--no-push",
+		"--verbosity=info",
+	)
+
+	// run test
+	got := p.Command()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
 func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 	// setup types
 	p := &Plugin{
