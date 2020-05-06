@@ -139,9 +139,9 @@ func main() {
 			Value:    cli.NewStringSlice("latest"),
 		},
 		&cli.StringSliceFlag{
-			EnvVars:  []string{"PARAMETER_LABELS", "REPO_LABELS"},
-			Name:     "repo.labels",
-			Usage:    "repository labels of the image",
+			EnvVars: []string{"PARAMETER_LABELS", "REPO_LABELS"},
+			Name:    "repo.labels",
+			Usage:   "repository labels of the image",
 		},
 	}
 
