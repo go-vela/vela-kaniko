@@ -12,6 +12,7 @@ func TestDocker_Image_Validate(t *testing.T) {
 		Args:       []string{},
 		Context:    ".",
 		Dockerfile: "Dockerfile",
+		Target:     "",
 	}
 
 	err := i.Validate()
@@ -25,6 +26,7 @@ func TestDocker_Image_Validate_NoContext(t *testing.T) {
 	i := &Image{
 		Args:       []string{},
 		Dockerfile: "Dockerfile",
+		Target:     "",
 	}
 
 	err := i.Validate()
@@ -38,6 +40,7 @@ func TestDocker_Image_Validate_NoDockerfile(t *testing.T) {
 	i := &Image{
 		Args:    []string{},
 		Context: ".",
+		Target:  "",
 	}
 
 	err := i.Validate()

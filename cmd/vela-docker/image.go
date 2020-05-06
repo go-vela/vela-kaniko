@@ -18,6 +18,8 @@ type Image struct {
 	Context string
 	// path to the file for building the image
 	Dockerfile string
+	// build stage to target for image
+	Target string
 }
 
 // Validate verifies the Image is properly configured.
