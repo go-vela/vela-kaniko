@@ -24,6 +24,7 @@ func TestDocker_Plugin_Exec_BadWrite(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -61,6 +62,7 @@ func TestDocker_Plugin_Exec_BadExec(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -95,6 +97,7 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "foo",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -121,6 +124,7 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--destination=index.docker.io/target/vela-docker:v0.0.0",
 		"--dockerfile=Dockerfile",
 		"--no-push",
+		"--target=foo",
 		"--verbosity=info",
 	)
 
@@ -144,6 +148,7 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -192,6 +197,7 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -240,6 +246,7 @@ func TestDocker_Plugin_Validate(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -270,6 +277,7 @@ func TestDocker_Plugin_Validate_NoBuild(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",
@@ -334,6 +342,7 @@ func TestDocker_Plugin_Validate_NoRegistry(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{},
 		Repo: &Repo{
@@ -363,6 +372,7 @@ func TestDocker_Plugin_Validate_NoRepo(t *testing.T) {
 			Args:       []string{"foo=bar"},
 			Context:    ".",
 			Dockerfile: "Dockerfile",
+			Target:     "",
 		},
 		Registry: &Registry{
 			Name:     "index.docker.io",

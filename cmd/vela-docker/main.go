@@ -84,6 +84,11 @@ func main() {
 			Usage:   "path to text file with build instructions",
 			Value:   "Dockerfile",
 		},
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_TARGET", "IMAGE_TARGET"},
+			Name:    "image.target",
+			Usage:   "build stage to target for image",
+		},
 
 		// Registry Flags
 
@@ -187,6 +192,7 @@ func run(c *cli.Context) error {
 			Args:       c.StringSlice("image.build_args"),
 			Context:    c.String("image.context"),
 			Dockerfile: c.String("image.dockerfile"),
+			Target:     c.String("image.target"),
 		},
 		// registry configuration
 		Registry: &Registry{
