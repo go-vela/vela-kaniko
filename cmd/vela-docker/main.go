@@ -138,6 +138,11 @@ func main() {
 			Usage:    "repository tags of the image",
 			Value:    cli.NewStringSlice("latest"),
 		},
+		&cli.StringSliceFlag{
+			EnvVars:  []string{"PARAMETER_LABELS", "REPO_LABELS"},
+			Name:     "repo.labels",
+			Usage:    "repository labels of the image",
+		},
 	}
 
 	err := app.Run(os.Args)
@@ -202,6 +207,7 @@ func run(c *cli.Context) error {
 			CacheName: c.String("repo.cache_name"),
 			Name:      c.String("repo.name"),
 			Tags:      c.StringSlice("repo.tags"),
+			Labels:    c.StringSlice("repo.labels"),
 		},
 	}
 
