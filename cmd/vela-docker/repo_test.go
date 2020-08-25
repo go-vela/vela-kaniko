@@ -10,8 +10,8 @@ func TestDocker_Repo_Validate(t *testing.T) {
 	// setup types
 	r := &Repo{
 		Cache:     true,
-		CacheName: "index.docker.io/target/vela-docker",
-		Name:      "index.docker.io/target/vela-docker",
+		CacheName: "index.docker.io/target/vela-kaniko",
+		Name:      "index.docker.io/target/vela-kaniko",
 		Tags:      []string{"latest"},
 		AutoTag:   true,
 	}
@@ -26,8 +26,8 @@ func TestDocker_Repo_Validate_NoCache(t *testing.T) {
 	// setup types
 	r := &Repo{
 		Cache:     false,
-		CacheName: "index.docker.io/target/vela-docker",
-		Name:      "index.docker.io/target/vela-docker",
+		CacheName: "index.docker.io/target/vela-kaniko",
+		Name:      "index.docker.io/target/vela-kaniko",
 		Tags:      []string{"latest"},
 		AutoTag:   true,
 	}
@@ -42,7 +42,7 @@ func TestDocker_Repo_Validate_NoName(t *testing.T) {
 	// setup types
 	r := &Repo{
 		Cache:     true,
-		CacheName: "index.docker.io/target/vela-docker",
+		CacheName: "index.docker.io/target/vela-kaniko",
 		Name:      "",
 		Tags:      []string{"latest"},
 		AutoTag:   true,
@@ -59,7 +59,7 @@ func TestDocker_Repo_Validate_InvalidTags(t *testing.T) {
 	r := &Repo{
 		Cache:     true,
 		CacheName: "",
-		Name:      "index.docker.io/target/vela-docker",
+		Name:      "index.docker.io/target/vela-kaniko",
 		Tags:      []string{"!@#$%^&*()"},
 		AutoTag:   false,
 	}
@@ -75,7 +75,7 @@ func TestDocker_Repo_Validate_NoTags(t *testing.T) {
 	r := &Repo{
 		Cache:     true,
 		CacheName: "",
-		Name:      "index.docker.io/target/vela-docker",
+		Name:      "index.docker.io/target/vela-kaniko",
 		Tags:      []string{},
 		AutoTag:   false,
 	}

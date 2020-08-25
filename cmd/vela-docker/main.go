@@ -20,8 +20,8 @@ func main() {
 
 	// Plugin Information
 
-	app.Name = "vela-docker"
-	app.HelpName = "vela-docker"
+	app.Name = "vela-kaniko"
+	app.HelpName = "vela-kaniko"
 	app.Usage = "Vela Docker plugin for building and publishing images"
 	app.Copyright = "Copyright (c) 2020 Target Brands, Inc. All rights reserved."
 	app.Authors = []*cli.Author{
@@ -196,9 +196,9 @@ func run(c *cli.Context) error {
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"code":     "https://github.com/go-vela/vela-docker",
+		"code":     "https://github.com/go-vela/vela-kaniko",
 		"docs":     "https://go-vela.github.io/docs/plugins/registry/docker",
-		"registry": "https://hub.docker.com/r/target/vela-docker",
+		"registry": "https://hub.docker.com/r/target/vela-kaniko",
 	}).Info("Vela Docker Plugin")
 
 	// create the plugin

@@ -2,9 +2,9 @@
 
 This plugin enables you to build and publish [Docker](https://www.docker.com/) images in a Vela pipeline.
 
-Source Code: https://github.com/go-vela/vela-docker
+Source Code: https://github.com/go-vela/vela-kaniko
 
-Registry: https://hub.docker.com/r/target/vela-docker
+Registry: https://hub.docker.com/r/target/vela-kaniko
 
 ## Usage
 
@@ -15,7 +15,7 @@ Sample of building and publishing an image:
 ```yaml
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
     parameters:
       registry: index.docker.io
@@ -27,7 +27,7 @@ Sample of building an image without publishing:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
     parameters:
 +     dry_run: true
@@ -40,7 +40,7 @@ Sample of building and publishing an image with custom tags:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
     parameters:
       registry: index.docker.io
@@ -55,7 +55,7 @@ Sample of building and publishing an image with automatic tags:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
     parameters:
 +     auto_tag: true
@@ -68,7 +68,7 @@ Sample of building and publishing an image with build arguments:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
     parameters:
 +     build_args:
@@ -82,7 +82,7 @@ Sample of building and publishing an image with caching:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
     parameters:
 +     cache: true
@@ -100,7 +100,7 @@ You can use Vela secrets to substitute sensitive values at runtime:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-docker:v0.1.0
+    image: target/vela-kaniko:v0.1.0
     pull: true
 +   secrets: [ docker_username, docker_password ]
     parameters:

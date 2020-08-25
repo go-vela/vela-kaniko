@@ -23,13 +23,13 @@ jobs:
       run: |
         go build -a \
           -ldflags '-s -w -extldflags "-static"' \
-          -o release/vela-docker \
-          github.com/go-vela/vela-docker/cmd/vela-docker
+          -o release/vela-kaniko \
+          github.com/go-vela/vela-kaniko/cmd/vela-kaniko
 
     - name: publish
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: target/vela-docker
+        name: target/vela-kaniko
         cache: true
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}

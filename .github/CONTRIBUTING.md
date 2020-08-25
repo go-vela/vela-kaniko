@@ -34,21 +34,21 @@ We are always open to new PRs! You can follow the below guide for learning how y
 
 ```bash
 # Clone the project
-git clone git@github.com:go-vela/vela-docker.git $HOME/go-vela/vela-docker
+git clone git@github.com:go-vela/vela-kaniko.git $HOME/go-vela/vela-kaniko
 ```
 
 * Navigate to the repository code:
 
 ```bash
 # Change into the project directory
-cd $HOME/go-vela/vela-docker
+cd $HOME/go-vela/vela-kaniko
 ```
 
 * Point the original code at your fork:
 
 ```bash
 # Add a remote branch pointing to your fork
-git remote add fork https://github.com/your_fork/vela-docker
+git remote add fork https://github.com/your_fork/vela-kaniko
 ```
 
 ### Running Locally
@@ -57,7 +57,7 @@ git remote add fork https://github.com/your_fork/vela-docker
 
 ```bash
 # Change into the project directory
-cd $HOME/go-vela/vela-docker
+cd $HOME/go-vela/vela-kaniko
 ```
 
 * Build the repository code:
@@ -80,7 +80,7 @@ make run
 
 ```bash
 # Change into the project directory
-cd $HOME/go-vela/vela-docker
+cd $HOME/go-vela/vela-kaniko
 ```
 
 * Write your code
