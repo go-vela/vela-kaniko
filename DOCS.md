@@ -8,14 +8,17 @@ Registry: https://hub.docker.com/r/target/vela-kaniko
 
 ## Usage
 
-_The plugin supports reading all parameters via environment variables or files. Values set as a file take precedence over default values set from the environment._
+_Notes:_
+
+* The plugin supports reading all parameters via environment variables or files. Values set as a file take precedence over default values set from the environment.
+* We do not recommended using latest for pipelines. Users should use pinned images to decrease volatility of external changes to their pipelines. 
 
 Sample of building and publishing an image:
 
 ```yaml
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
     parameters:
       registry: index.docker.io
@@ -27,7 +30,7 @@ Sample of building an image without publishing:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
     parameters:
 +     dry_run: true
@@ -40,7 +43,7 @@ Sample of building and publishing an image with custom tags:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
     parameters:
       registry: index.docker.io
@@ -55,7 +58,7 @@ Sample of building and publishing an image with automatic tags:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
     parameters:
 +     auto_tag: true
@@ -68,7 +71,7 @@ Sample of building and publishing an image with build arguments:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
     parameters:
 +     build_args:
@@ -82,7 +85,7 @@ Sample of building and publishing an image with caching:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
     parameters:
 +     cache: true
@@ -100,7 +103,7 @@ You can use Vela secrets to substitute sensitive values at runtime:
 ```diff
 steps:
   - name: publish_hello-world
-    image: target/vela-kaniko:v0.1.0
+    image: target/vela-kaniko:latest
     pull: true
 +   secrets: [ docker_username, docker_password ]
     parameters:
