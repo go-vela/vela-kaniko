@@ -1,4 +1,4 @@
-module github.com/go-vela/vela-docker
+module github.com/go-vela/vela-kaniko
 
 go 1.13
 

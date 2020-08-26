@@ -3,7 +3,7 @@
 # Use of this source code is governed by the LICENSE file in this repository.
 
 ## Template Variables
-# - .image      (default: "target/vela-docker:latest")
+# - .image      (default: "target/vela-kaniko:latest")
 # - .pull       (default: true)
 # - .log_level  (default: "info")
 # - .auto_tag   (default: false)
@@ -22,7 +22,7 @@ metadata:
 
 steps:
   - name: docker_plugin_template
-    image: {{ default "target/vela-docker:latest" .image }}
+    image: {{ default "target/vela-kaniko:latest" .image }}
     pull: {{ default "true" .pull }}
     parameters:
       log_level: {{ default "info" .log_level }}

@@ -47,7 +47,7 @@ jobs:
           # https://github.com/github-release/github-release#how-to-use
           $(go env GOPATH)/bin/github-release edit \
             --user go-vela \
-            --repo vela-docker \
+            --repo vela-kaniko \
             --tag ${{ steps.version.outputs.VERSION }} \
             --name ${{ steps.version.outputs.VERSION }} \
             --description "$(cat $GITHUB_WORKSPACE/CHANGELOG.md)"

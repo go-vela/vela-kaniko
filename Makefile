@@ -87,11 +87,11 @@ test-cover:
 .PHONY: build
 build:
 	@echo
-	@echo "### Building release/vela-docker binary"
+	@echo "### Building release/vela-kaniko binary"
 	GOOS=linux CGO_ENABLED=0 \
 		go build -a \
-		-o release/vela-docker \
-		github.com/go-vela/vela-docker/cmd/vela-docker
+		-o release/vela-kaniko \
+		github.com/go-vela/vela-kaniko/cmd/vela-kaniko
 
 # The `build-static` target is intended to compile
 # the Go source code into a statically linked binary.
@@ -100,12 +100,12 @@ build:
 .PHONY: build-static
 build-static:
 	@echo
-	@echo "### Building static release/vela-docker binary"
+	@echo "### Building static release/vela-kaniko binary"
 	GOOS=linux CGO_ENABLED=0 \
 		go build -a \
 		-ldflags '-s -w -extldflags "-static"' \
-		-o release/vela-docker \
-		github.com/go-vela/vela-docker/cmd/vela-docker
+		-o release/vela-kaniko \
+		github.com/go-vela/vela-kaniko/cmd/vela-kaniko
 
 # The `check` target is intended to output all
 # dependencies from the Go module that need updates.
@@ -174,8 +174,8 @@ bump-deps-full: check
 .PHONY: docker-build
 docker-build:
 	@echo
-	@echo "### Building vela-docker:local image"
-	@docker build --no-cache -t vela-docker:local .
+	@echo "### Building vela-kaniko:local image"
+	@docker build --no-cache -t vela-kaniko:local .
 
 # The `docker-test` target is intended to execute
 # the Docker image for the plugin with test variables.
@@ -184,7 +184,7 @@ docker-build:
 .PHONY: docker-test
 docker-test:
 	@echo
-	@echo "### Testing vela-docker:local image"
+	@echo "### Testing vela-kaniko:local image"
 	@docker run --rm \
 		-e BUILD_COMMIT=123abcdefg \
 		-e BUILD_EVENT=push \
@@ -192,10 +192,10 @@ docker-test:
 		-e PARAMETER_DOCKERFILE=Dockerfile.example \
 		-e PARAMETER_DRY_RUN=true \
 		-e PARAMETER_REGISTRY=index.docker.io \
-		-e PARAMETER_REPO=index.docker.io/target/vela-docker \
+		-e PARAMETER_REPO=index.docker.io/target/vela-kaniko \
 		-e PARAMETER_TAGS=latest \
 		-v $(shell pwd):/workspace \
-		vela-docker:local
+		vela-kaniko:local
 
 # The `docker-run` target is intended to execute
 # the Docker image for the plugin.
@@ -204,7 +204,7 @@ docker-test:
 .PHONY: docker-run
 docker-run:
 	@echo
-	@echo "### Executing vela-docker:local image"
+	@echo "### Executing vela-kaniko:local image"
 	@docker run --rm \
 		-e BUILD_COMMIT \
 		-e BUILD_EVENT \
@@ -222,4 +222,4 @@ docker-run:
 		-e PARAMETER_REPO \
 		-e PARAMETER_TAGS \
 		-v $(shell pwd):/workspace \
-		vela-docker:local
+		vela-kaniko:local
