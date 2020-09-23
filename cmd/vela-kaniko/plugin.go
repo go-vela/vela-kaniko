@@ -35,6 +35,11 @@ func (p *Plugin) Command() *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
+	// check if the snapshot mode is set
+	if len(p.Build.SnapshotMode) != 0 {
+		flags = append(flags, fmt.Sprintf("--snapshotMode=%s", p.Build.SnapshotMode))
+	}
+
 	// iterate through all image build args
 	for _, arg := range p.Image.Args {
 		// add flag for build args from provided image build arg
@@ -91,6 +96,11 @@ func (p *Plugin) Command() *exec.Cmd {
 	if p.Registry.DryRun {
 		// add flag for building without publishing image
 		flags = append(flags, fmt.Sprint("--no-push"))
+	}
+
+	// check if the docker registry mirror is set
+	if len(p.Registry.Mirror) != 0 {
+		flags = append(flags, fmt.Sprintf("--registry-mirror=%s", p.Registry.Mirror))
 	}
 
 	// check if the image target is set
