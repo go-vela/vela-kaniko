@@ -68,7 +68,7 @@ func main() {
 			EnvVars:  []string{"PARAMETER_SNAPSHOT_MODE"},
 			FilePath: string("/vela/parameters/docker/build/sha,/vela/secrets/docker/build/sha"),
 			Name:     "build.snapshot-mode",
-			Usage:    "commit SHA-1 hash for build",
+			Usage:    "control how to snapshot the filesystem. - options (full|redo|time)",
 		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_TAG", "BUILD_TAG"},

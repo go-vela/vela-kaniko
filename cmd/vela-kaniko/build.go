@@ -17,13 +17,13 @@ type Build struct {
 	Event string
 	// SHA-1 hash generated for commit
 	Sha string
-	// control how to snapshot the filesystem.
+	// control how to snapshot the filesystem. - options (full|redo|time)
 	SnapshotMode string
 	// tag generated for build
 	Tag string
 }
 
-// SnapshotModeValues represents the available options for setting a snapshot mode
+// SnapshotModeValues represents the available options for setting a snapshot mode.
 //
 // https://github.com/GoogleContainerTools/kaniko#--snapshotmode
 var SnapshotModeValues = []string{"full", "redo", "time"}
@@ -53,7 +53,7 @@ func (b *Build) Validate() error {
 	return nil
 }
 
-// isSnapshotModeValid checks if a value is within the list of accepted values
+// isSnapshotModeValid checks if a value is within the list of accepted values.
 func isSnapshotModeValid(value string) bool {
 	// loop through snapshot values checking the value against the list
 	for _, mode := range SnapshotModeValues {

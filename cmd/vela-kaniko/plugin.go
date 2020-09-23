@@ -95,7 +95,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	// check if registry dry run is enabled
 	if p.Registry.DryRun {
 		// add flag for building without publishing image
-		flags = append(flags, fmt.Sprint("--no-push"))
+		flags = append(flags, "--no-push")
 	}
 
 	// check if the docker registry mirror is set
