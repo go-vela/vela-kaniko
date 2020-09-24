@@ -15,6 +15,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+// nolint
 func main() {
 	app := cli.NewApp()
 
@@ -38,6 +39,7 @@ func main() {
 
 	// Plugin Flags
 
+	// nolint
 	app.Flags = []cli.Flag{
 
 		&cli.StringFlag{
@@ -61,6 +63,12 @@ func main() {
 			FilePath: string("/vela/parameters/docker/build/sha,/vela/secrets/docker/build/sha"),
 			Name:     "build.sha",
 			Usage:    "commit SHA-1 hash for build",
+		},
+		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_SNAPSHOT_MODE"},
+			FilePath: string("/vela/parameters/docker/build/sha,/vela/secrets/docker/build/sha"),
+			Name:     "build.snapshot-mode",
+			Usage:    "control how to snapshot the filesystem. - options (full|redo|time)",
 		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_TAG", "BUILD_TAG"},
@@ -112,6 +120,12 @@ func main() {
 			Name:     "registry.name",
 			Usage:    "Docker registry name to communicate with",
 			Value:    "index.docker.io",
+		},
+		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_MIRROR", "REGISTRY_MIRROR"},
+			FilePath: string("/vela/parameters/docker/registry/name,/vela/secrets/docker/registry/name"),
+			Name:     "registry.mirror",
+			Usage:    "name of the mirror registry to use instead of index.docker.io",
 		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_USERNAME", "REGISTRY_USERNAME", "DOCKER_USERNAME"},
@@ -205,9 +219,10 @@ func run(c *cli.Context) error {
 	p := &Plugin{
 		// build configuration
 		Build: &Build{
-			Event: c.String("build.event"),
-			Sha:   c.String("build.sha"),
-			Tag:   c.String("build.tag"),
+			Event:        c.String("build.event"),
+			Sha:          c.String("build.sha"),
+			SnapshotMode: c.String("build.snapshot-mode"),
+			Tag:          c.String("build.tag"),
 		},
 		// image configuration
 		Image: &Image{
@@ -220,6 +235,7 @@ func run(c *cli.Context) error {
 		Registry: &Registry{
 			DryRun:   c.Bool("registry.dry_run"),
 			Name:     c.String("registry.name"),
+			Mirror:   c.String("registry.mirror"),
 			Username: c.String("registry.username"),
 			Password: c.String("registry.password"),
 		},

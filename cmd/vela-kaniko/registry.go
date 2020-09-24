@@ -29,6 +29,8 @@ const (
 //
 // https://docs.docker.com/registry/
 type Registry struct {
+	// name of the mirror registry to use instead of index.docker.io
+	Mirror string
 	// name of the registry to publish the image to
 	Name string
 	// user name for communication with the registry
