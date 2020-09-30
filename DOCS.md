@@ -8,11 +8,7 @@ Registry: https://hub.docker.com/r/target/vela-kaniko
 
 ## Usage
 
-_Notes:_
-
-* The plugin supports reading all parameters via environment variables or files. Values set as a file take precedence over default values set from the environment.
-* We do not recommended using latest for pipelines. Users should use pinned images to decrease volatility of external changes to their pipelines. 
-* The [Snapshot mode](https://github.com/GoogleContainerTools/kaniko/releases/tag/v1.0.0) can help increase build times but it is recommend to follow Kanikos guidelines for picking the mode.
+**NOTE: It is not recommended to use `latest` as the tag for the Docker image. Users should use a semantically versioned tag instead.**
 
 Sample of building and publishing an image:
 
@@ -129,7 +125,11 @@ steps:
 
 ## Parameters
 
-**NOTE: Vela injects several variables, by default, that this plugin can load in automatically.**
+**NOTE:**
+
+* the plugin supports reading all parameters via environment variables or files
+* values set from a file take precedence over values set from the environment
+* the [Snapshot mode](https://github.com/GoogleContainerTools/kaniko/releases/tag/v1.0.0) can help increase build times but it is recommend to follow Kanikos guidelines for picking the mode
 
 The following parameters are used to configure the image:
 
