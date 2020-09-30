@@ -20,7 +20,7 @@ Sample of building and publishing an image:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
@@ -32,7 +32,7 @@ Sample of building an image without publishing:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     dry_run: true
       registry: index.docker.io
@@ -45,7 +45,7 @@ Sample of building and publishing an image with custom tags:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
@@ -60,7 +60,7 @@ Sample of building and publishing an image with automatic tags:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     auto_tag: true
       registry: index.docker.io
@@ -73,7 +73,7 @@ Sample of building and publishing an image with build arguments:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     build_args:
 +       - FOO=bar
@@ -87,7 +87,7 @@ Sample of building and publishing an image with caching:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     cache: true
 +     cache_repo: index.docker.io/octocat/hello-world
@@ -101,7 +101,7 @@ Sample of building using a snapshot mode and publishing an image with caching:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     snapshot_mode: redo
       registry: index.docker.io
@@ -118,7 +118,7 @@ You can use Vela secrets to substitute sensitive values at runtime:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
 +   secrets: [ docker_username, docker_password ]
     parameters:
       registry: index.docker.io
