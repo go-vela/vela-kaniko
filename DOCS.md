@@ -8,11 +8,7 @@ Registry: https://hub.docker.com/r/target/vela-kaniko
 
 ## Usage
 
-_Notes:_
-
-* The plugin supports reading all parameters via environment variables or files. Values set as a file take precedence over default values set from the environment.
-* We do not recommended using latest for pipelines. Users should use pinned images to decrease volatility of external changes to their pipelines. 
-* The [Snapshot mode](https://github.com/GoogleContainerTools/kaniko/releases/tag/v1.0.0) can help increase build times but it is recommend to follow Kanikos guidelines for picking the mode.
+**NOTE: It is not recommended to use `latest` as the tag for the Docker image. Users should use a semantically versioned tag instead.**
 
 Sample of building and publishing an image:
 
@@ -20,7 +16,7 @@ Sample of building and publishing an image:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
@@ -32,7 +28,7 @@ Sample of building an image without publishing:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     dry_run: true
       registry: index.docker.io
@@ -45,7 +41,7 @@ Sample of building and publishing an image with custom tags:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
@@ -60,7 +56,7 @@ Sample of building and publishing an image with automatic tags:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     auto_tag: true
       registry: index.docker.io
@@ -73,7 +69,7 @@ Sample of building and publishing an image with build arguments:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     build_args:
 +       - FOO=bar
@@ -87,7 +83,7 @@ Sample of building and publishing an image with caching:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     cache: true
 +     cache_repo: index.docker.io/octocat/hello-world
@@ -101,7 +97,7 @@ Sample of building using a snapshot mode and publishing an image with caching:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
     parameters:
 +     snapshot_mode: redo
       registry: index.docker.io
@@ -118,7 +114,7 @@ You can use Vela secrets to substitute sensitive values at runtime:
 steps:
   - name: publish_hello-world
     image: target/vela-kaniko:latest
-    pull: true
+    pull: always
 +   secrets: [ docker_username, docker_password ]
     parameters:
       registry: index.docker.io
@@ -129,7 +125,11 @@ steps:
 
 ## Parameters
 
-**NOTE: Vela injects several variables, by default, that this plugin can load in automatically.**
+**NOTE:**
+
+* the plugin supports reading all parameters via environment variables or files
+* values set from a file take precedence over values set from the environment
+* the [Snapshot mode](https://github.com/GoogleContainerTools/kaniko/releases/tag/v1.0.0) can help increase build times but it is recommend to follow Kanikos guidelines for picking the mode
 
 The following parameters are used to configure the image:
 
