@@ -14,6 +14,7 @@ func TestDocker_Repo_Validate(t *testing.T) {
 		Name:      "index.docker.io/target/vela-kaniko",
 		Tags:      []string{"latest"},
 		AutoTag:   true,
+		Label:     &Label{},
 	}
 
 	err := r.Validate()
