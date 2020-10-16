@@ -179,6 +179,33 @@ func main() {
 			Name:     "repo.labels",
 			Usage:    "repository labels of the image",
 		},
+
+		// extract vars for open image specification labeling
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_AUTHOR_EMAIL"},
+			Name:    "label.author-email",
+			Usage:   "author from the source commit",
+		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_COMMIT"},
+			Name:    "label.commit",
+			Usage:   "commit sha from the source commit",
+		},
+		&cli.IntFlag{
+			EnvVars: []string{"VELA_BUILD_NUMBER"},
+			Name:    "label.number",
+			Usage:   "build number",
+		},
+		&cli.IntFlag{
+			EnvVars: []string{"VELA_REPO_FULL_NAME"},
+			Name:    "label.full-name",
+			Usage:   "full name of the repository",
+		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_REPO_LINK"},
+			Name:    "label.url",
+			Usage:   "direct url of the repository",
+		},
 	}
 
 	err := app.Run(os.Args)
@@ -246,7 +273,15 @@ func run(c *cli.Context) error {
 			CacheName: c.String("repo.cache_name"),
 			Name:      c.String("repo.name"),
 			Tags:      c.StringSlice("repo.tags"),
-			Labels:    c.StringSlice("repo.labels"),
+			Label: &Label{
+				AuthorEmail: c.String("label.author-email"),
+				Commit:      c.String("label.commit"),
+				Created:     time.Now().Format(time.RFC3339),
+				FullName:    c.String("label.full-name"),
+				Number:      c.Int("label.number"),
+				URL:         c.String("label.url"),
+			},
+			Labels: c.StringSlice("repo.labels"),
 		},
 	}
 
