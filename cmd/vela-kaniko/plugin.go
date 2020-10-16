@@ -86,7 +86,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	// iterate through all repo labels
 	for _, label := range p.Repo.Labels {
 		// add flag for tag from provided repo tag
-		flags = append(flags, fmt.Sprintf("--label=%s", label))
+		flags = append(flags, "--label", label)
 	}
 
 	// add flag for dockerfile from provided image dockerfile

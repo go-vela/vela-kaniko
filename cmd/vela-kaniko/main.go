@@ -196,7 +196,7 @@ func main() {
 			Name:    "label.number",
 			Usage:   "build number",
 		},
-		&cli.IntFlag{
+		&cli.StringFlag{
 			EnvVars: []string{"VELA_REPO_FULL_NAME"},
 			Name:    "label.full-name",
 			Usage:   "full name of the repository",
