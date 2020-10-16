@@ -104,7 +104,7 @@ func (r *Repo) Validate() error {
 	}
 
 	// add pre-defined labels
-	r.Tags = append(r.Tags, r.AddLabels()...)
+	r.Labels = append(r.Labels, r.AddLabels()...)
 
 	return nil
 }
