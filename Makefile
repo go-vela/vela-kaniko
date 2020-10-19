@@ -223,5 +223,10 @@ docker-run:
 		-e PARAMETER_REGISTRY \
 		-e PARAMETER_REPO \
 		-e PARAMETER_TAGS \
+		-e VELA_BUILD_AUTHOR_EMAIL \
+		-e VELA_BUILD_COMMIT \
+		-e VELA_BUILD_NUMBER \
+		-e VELA_REPO_FULL_NAME \
+		-e VELA_REPO_LINK \
 		-v $(shell pwd):/workspace \
 		vela-kaniko:local

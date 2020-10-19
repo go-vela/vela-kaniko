@@ -7,6 +7,7 @@ package main
 import (
 	"os/exec"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -161,6 +162,7 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     &Label{},
 			Labels:    []string{"key1=tag1"},
 		},
 	}
@@ -173,7 +175,7 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
 		"--destination=index.docker.io/target/vela-kaniko:v0.0.0",
-		"--label=key1=tag1",
+		"--label key1=tag1",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--verbosity=info",
@@ -182,7 +184,7 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -417,6 +419,7 @@ func TestDocker_Plugin_Validate(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     &Label{},
 		},
 	}
 
