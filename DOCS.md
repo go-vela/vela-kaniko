@@ -147,14 +147,13 @@ Users can use [Vela external secrets](https://go-vela.github.io/docs/concepts/pi
 
 ```diff
 steps:
-  - name: copy_artifacts
-    image: target/vela-artifactory:latest
+  - name: publish_hello-world
+    image: target/vela-kaniko:latest
     pull: always
++   secrets: [ kaniko_username, kaniko_password ]
     parameters:
-      action: copy
-      path: libs-snapshot-local/foo.txt
-      target: libs-snapshot-local/bar.txt
-      url: http://localhost:8081/artifactory
+      registry: index.docker.io
+      repo: index.docker.io/octocat/hello-world
 -     username: octocat
 -     password: superSecretPassword
 ```
