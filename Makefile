@@ -225,14 +225,14 @@ docker-test:
 	@echo
 	@echo "### Testing vela-kaniko:local image"
 	@docker run --rm \
-		-e BUILD_COMMIT=123abcdefg \
-		-e BUILD_EVENT=push \
 		-e PARAMETER_CONTEXT=/workspace/ \
 		-e PARAMETER_DOCKERFILE=Dockerfile.example \
 		-e PARAMETER_DRY_RUN=true \
 		-e PARAMETER_REGISTRY=index.docker.io \
 		-e PARAMETER_REPO=index.docker.io/target/vela-kaniko \
 		-e PARAMETER_TAGS=latest \
+		-e VELA_BUILD_COMMIT=123abcdefg \
+		-e VELA_BUILD_EVENT=push \
 		-v $(shell pwd):/workspace \
 		vela-kaniko:local
 
@@ -245,9 +245,6 @@ docker-run:
 	@echo
 	@echo "### Executing vela-kaniko:local image"
 	@docker run --rm \
-		-e BUILD_COMMIT \
-		-e BUILD_EVENT \
-		-e BUILD_TAG \
 		-e DOCKER_USERNAME \
 		-e DOCKER_PASSWORD \
 		-e PARAMETER_AUTO_TAG \
@@ -257,14 +254,18 @@ docker-run:
 		-e PARAMETER_CONTEXT \
 		-e PARAMETER_DOCKERFILE \
 		-e PARAMETER_DRY_RUN \
+		-e PARAMETER_LABELS \
 		-e PARAMETER_MIRROR \
 		-e PARAMETER_SNAPSHOT_MODE \
 		-e PARAMETER_REGISTRY \
 		-e PARAMETER_REPO \
 		-e PARAMETER_TAGS \
+		-e PARAMETER_TARGET \
 		-e VELA_BUILD_AUTHOR_EMAIL \
 		-e VELA_BUILD_COMMIT \
+		-e VELA_BUILD_EVENT \
 		-e VELA_BUILD_NUMBER \
+		-e VELA_BUILD_TAG \
 		-e VELA_REPO_FULL_NAME \
 		-e VELA_REPO_LINK \
 		-v $(shell pwd):/workspace \
