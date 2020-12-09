@@ -48,8 +48,8 @@ func main() {
 	app.Flags = []cli.Flag{
 
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_LOG_LEVEL", "VELA_LOG_LEVEL", "DOCKER_LOG_LEVEL"},
-			FilePath: string("/vela/parameters/docker/log_level,/vela/secrets/docker/log_level"),
+			EnvVars:  []string{"PARAMETER_LOG_LEVEL", "KANIKO_LOG_LEVEL"},
+			FilePath: "/vela/parameters/kaniko/log_level,/vela/secrets/kaniko/log_level",
 			Name:     "log.level",
 			Usage:    "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
 			Value:    "info",
@@ -58,26 +58,26 @@ func main() {
 		// Build Flags
 
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_EVENT", "BUILD_EVENT"},
-			FilePath: string("/vela/parameters/docker/build/event,/vela/secrets/docker/build/event"),
+			EnvVars:  []string{"PARAMETER_EVENT", "KANIKO_EVENT", "VELA_BUILD_EVENT"},
+			FilePath: "/vela/parameters/kaniko/event,/vela/secrets/kaniko/event",
 			Name:     "build.event",
 			Usage:    "event triggered for build",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_SHA", "BUILD_COMMIT"},
-			FilePath: string("/vela/parameters/docker/build/sha,/vela/secrets/docker/build/sha"),
+			EnvVars:  []string{"PARAMETER_SHA", "KANIKO_SHA", "VELA_BUILD_COMMIT"},
+			FilePath: "/vela/parameters/kaniko/sha,/vela/secrets/kaniko/sha",
 			Name:     "build.sha",
 			Usage:    "commit SHA-1 hash for build",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_SNAPSHOT_MODE"},
-			FilePath: string("/vela/parameters/docker/build/sha,/vela/secrets/docker/build/sha"),
-			Name:     "build.snapshot-mode",
+			EnvVars:  []string{"PARAMETER_SNAPSHOT_MODE", "KANIKO_SNAPSHOT_MODE"},
+			FilePath: "/vela/parameters/kaniko/snapshot_mode,/vela/secrets/kaniko/snapshot_mode",
+			Name:     "build.snapshot_mode",
 			Usage:    "control how to snapshot the filesystem. - options (full|redo|time)",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_TAG", "BUILD_TAG"},
-			FilePath: string("/vela/parameters/docker/build/tag,/vela/secrets/docker/build/tag"),
+			EnvVars:  []string{"PARAMETER_TAG", "KANIKO_TAG", "VELA_BUILD_TAG"},
+			FilePath: "/vela/parameters/kaniko/tag,/vela/secrets/kaniko/tag",
 			Name:     "build.tag",
 			Usage:    "full tag reference for build (only populated for tag events)",
 		},
@@ -85,28 +85,28 @@ func main() {
 		// Image Flags
 
 		&cli.StringSliceFlag{
-			EnvVars:  []string{"PARAMETER_BUILD_ARGS", "IMAGE_BUILD_ARGS"},
-			FilePath: string("/vela/parameters/docker/image/build_args,/vela/secrets/docker/image/build_args"),
+			EnvVars:  []string{"PARAMETER_BUILD_ARGS", "KANIKO_BUILD_ARGS"},
+			FilePath: "/vela/parameters/kaniko/build_args,/vela/secrets/kaniko/build_args",
 			Name:     "image.build_args",
 			Usage:    "variables passed to the image at build-time",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_CONTEXT", "IMAGE_CONTEXT"},
-			FilePath: string("/vela/parameters/docker/image/context,/vela/secrets/docker/image/context"),
+			EnvVars:  []string{"PARAMETER_CONTEXT", "KANIKO_CONTEXT"},
+			FilePath: "/vela/parameters/kaniko/context,/vela/secrets/kaniko/context",
 			Name:     "image.context",
 			Usage:    "path on local filesystem for building image from",
 			Value:    ".",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_DOCKERFILE", "IMAGE_DOCKERFILE"},
-			FilePath: string("/vela/parameters/docker/image/dockerfile,/vela/secrets/docker/image/dockerfile"),
+			EnvVars:  []string{"PARAMETER_DOCKERFILE", "KANIKO_DOCKERFILE"},
+			FilePath: "/vela/parameters/kaniko/dockerfile,/vela/secrets/kaniko/dockerfile",
 			Name:     "image.dockerfile",
 			Usage:    "path to text file with build instructions",
 			Value:    "Dockerfile",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_TARGET", "IMAGE_TARGET"},
-			FilePath: string("/vela/parameters/docker/image/target,/vela/secrets/docker/image/target"),
+			EnvVars:  []string{"PARAMETER_TARGET", "KANIKO_TARGET"},
+			FilePath: "/vela/parameters/kaniko/target,/vela/secrets/kaniko/target",
 			Name:     "image.target",
 			Usage:    "build stage to target for image",
 		},
@@ -114,33 +114,33 @@ func main() {
 		// Registry Flags
 
 		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_DRY_RUN", "REGISTRY_DRY_RUN"},
-			FilePath: string("/vela/parameters/docker/dry_run,/vela/secrets/docker/dry_run"),
+			EnvVars:  []string{"PARAMETER_DRY_RUN", "KANIKO_DRY_RUN"},
+			FilePath: "/vela/parameters/kaniko/dry_run,/vela/secrets/kaniko/dry_run",
 			Name:     "registry.dry_run",
 			Usage:    "enables building images without publishing to the registry",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_REGISTRY", "REGISTRY_NAME"},
-			FilePath: string("/vela/parameters/docker/registry/name,/vela/secrets/docker/registry/name"),
+			EnvVars:  []string{"PARAMETER_REGISTRY", "KANIKO_REGISTRY"},
+			FilePath: "/vela/parameters/kaniko/registry,/vela/secrets/kaniko/registry",
 			Name:     "registry.name",
 			Usage:    "Docker registry name to communicate with",
 			Value:    "index.docker.io",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_MIRROR", "REGISTRY_MIRROR"},
-			FilePath: string("/vela/parameters/docker/registry/name,/vela/secrets/docker/registry/name"),
+			EnvVars:  []string{"PARAMETER_MIRROR", "KANIKO_MIRROR"},
+			FilePath: "/vela/parameters/kaniko/mirror,/vela/secrets/kaniko/mirror",
 			Name:     "registry.mirror",
 			Usage:    "name of the mirror registry to use instead of index.docker.io",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_USERNAME", "REGISTRY_USERNAME", "DOCKER_USERNAME"},
-			FilePath: string("/vela/parameters/docker/registry/username,/vela/secrets/docker/registry/username,/vela/secrets/docker/username"),
+			EnvVars:  []string{"PARAMETER_USERNAME", "KANIKO_USERNAME", "DOCKER_USERNAME"},
+			FilePath: "/vela/parameters/kaniko/username,/vela/secrets/kaniko/username",
 			Name:     "registry.username",
 			Usage:    "user name for communication with the registry",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_PASSWORD", "REGISTRY_PASSWORD", "DOCKER_PASSWORD"},
-			FilePath: string("/vela/parameters/docker/registry/password,/vela/secrets/docker/registry/password,/vela/secrets/docker/password"),
+			EnvVars:  []string{"PARAMETER_PASSWORD", "KANIKO_PASSWORD", "DOCKER_PASSWORD"},
+			FilePath: "/vela/parameters/kaniko/password,/vela/secrets/kaniko/password",
 			Name:     "registry.password",
 			Usage:    "password for communication with the registry",
 		},
@@ -148,39 +148,39 @@ func main() {
 		// Repo Flags
 
 		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_AUTO_TAG", "REPO_AUTO_TAG"},
-			FilePath: string("/vela/parameters/docker/repo/auto_tag,/vela/secrets/docker/repo/auto_tag"),
+			EnvVars:  []string{"PARAMETER_AUTO_TAG", "KANIKO_AUTO_TAG"},
+			FilePath: "/vela/parameters/kaniko/auto_tag,/vela/secrets/kaniko/auto_tag",
 			Name:     "repo.auto_tag",
 			Usage:    "enables automatically providing tags for the image",
 		},
 		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_CACHE", "REPO_CACHE"},
-			FilePath: string("/vela/parameters/docker/repo/cache,/vela/secrets/docker/repo/cache"),
+			EnvVars:  []string{"PARAMETER_CACHE", "KANIKO_CACHE"},
+			FilePath: "/vela/parameters/kaniko/cache,/vela/secrets/kaniko/cache",
 			Name:     "repo.cache",
 			Usage:    "enables caching of each layer for the image",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_CACHE_REPO", "REPO_CACHE_NAME"},
-			FilePath: string("/vela/parameters/docker/repo/cache_name,/vela/secrets/docker/repo/cache_name"),
+			EnvVars:  []string{"PARAMETER_CACHE_REPO", "KANIKO_CACHE_REPO"},
+			FilePath: "/vela/parameters/kaniko/cache_repo,/vela/secrets/kaniko/cache_repo",
 			Name:     "repo.cache_name",
 			Usage:    "enables caching of each layer for a specific repo for the image",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_REPO", "REPO_NAME"},
-			FilePath: string("/vela/parameters/docker/repo/name,/vela/secrets/docker/repo/name"),
+			EnvVars:  []string{"PARAMETER_REPO", "KANIKO_REPO"},
+			FilePath: "/vela/parameters/kaniko/repo,/vela/secrets/kaniko/repo",
 			Name:     "repo.name",
 			Usage:    "repository name for the image",
 		},
 		&cli.StringSliceFlag{
-			EnvVars:  []string{"PARAMETER_TAGS", "REPO_TAGS"},
-			FilePath: string(".tags,/vela/parameters/docker/repo/tags,/vela/secrets/docker/repo/tags"),
+			EnvVars:  []string{"PARAMETER_TAGS", "KANIKO_TAGS"},
+			FilePath: "/vela/parameters/kaniko/tags,/vela/secrets/kaniko/tags",
 			Name:     "repo.tags",
 			Usage:    "repository tags of the image",
 			Value:    cli.NewStringSlice("latest"),
 		},
 		&cli.StringSliceFlag{
-			EnvVars:  []string{"PARAMETER_LABELS", "REPO_LABELS"},
-			FilePath: string("/vela/parameters/docker/repo/labels,/vela/secrets/docker/repo/labels"),
+			EnvVars:  []string{"PARAMETER_LABELS", "KANIKO_LABELS"},
+			FilePath: "/vela/parameters/kaniko/labels,/vela/secrets/kaniko/labels",
 			Name:     "repo.labels",
 			Usage:    "repository labels of the image",
 		},
@@ -188,7 +188,7 @@ func main() {
 		// extract vars for open image specification labeling
 		&cli.StringFlag{
 			EnvVars: []string{"VELA_BUILD_AUTHOR_EMAIL"},
-			Name:    "label.author-email",
+			Name:    "label.author_email",
 			Usage:   "author from the source commit",
 		},
 		&cli.StringFlag{
@@ -203,7 +203,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			EnvVars: []string{"VELA_REPO_FULL_NAME"},
-			Name:    "label.full-name",
+			Name:    "label.full_name",
 			Usage:   "full name of the repository",
 		},
 		&cli.StringFlag{
@@ -262,7 +262,7 @@ func run(c *cli.Context) error {
 		Build: &Build{
 			Event:        c.String("build.event"),
 			Sha:          c.String("build.sha"),
-			SnapshotMode: c.String("build.snapshot-mode"),
+			SnapshotMode: c.String("build.snapshot_mode"),
 			Tag:          c.String("build.tag"),
 		},
 		// image configuration
@@ -288,10 +288,10 @@ func run(c *cli.Context) error {
 			Name:      c.String("repo.name"),
 			Tags:      c.StringSlice("repo.tags"),
 			Label: &Label{
-				AuthorEmail: c.String("label.author-email"),
+				AuthorEmail: c.String("label.author_email"),
 				Commit:      c.String("label.commit"),
 				Created:     time.Now().Format(time.RFC3339),
-				FullName:    c.String("label.full-name"),
+				FullName:    c.String("label.full_name"),
 				Number:      c.Int("label.number"),
 				URL:         c.String("label.url"),
 			},
