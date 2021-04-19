@@ -234,6 +234,7 @@ docker-test:
 		-e VELA_BUILD_COMMIT=123abcdefg \
 		-e VELA_BUILD_EVENT=push \
 		-v $(shell pwd):/workspace \
+		-v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:rw \
 		vela-kaniko:local
 
 # The `docker-run` target is intended to execute
