@@ -39,7 +39,7 @@ func main() {
 
 	app.Name = "vela-kaniko"
 	app.HelpName = "vela-kaniko"
-	app.Usage = "Vela Docker plugin for building and publishing images"
+	app.Usage = "Vela Kaniko plugin for building and publishing images"
 	app.Copyright = "Copyright (c) 2021 Target Brands, Inc. All rights reserved."
 	app.Authors = []*cli.Author{
 		{
