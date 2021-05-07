@@ -56,6 +56,7 @@ steps:
 
 Sample of building and publishing an image with automatic tags:
 
+
 ```diff
 steps:
   - name: publish_hello-world
@@ -66,6 +67,17 @@ steps:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
 ```
+
+Depending on the type of event, the image will be tagged as follows:
+
+* tag event (using `v1.0.0` as an example):
+    * `index.docker.io/octocat/hello-world:latest`
+    * `index.docker.io/octocat/hello-world:v1.0.0`
+
+* all other events:
+    * `index.docker.io/octocat/hello-world:latest`
+    * `index.docker.io/octocat/hello-world:eeea105fed7fc11bda4b43a00edfc49a5c982968`
+
 
 Sample of building and publishing an image with build arguments:
 
@@ -174,7 +186,7 @@ The following parameters are used to configure the image:
 
 | Name            | Description                                                        | Required | Default           | Environment Variables                                          |
 | --------------- | ------------------------------------------------------------------ | -------- | ----------------- | -------------------------------------------------------------- |
-| `auto_tag`      | enables tagging of image automatically                             | `false`  | `false`           | `PARAMETER_AUTO_TAG`<br>`KANIKO_AUTO_TAG`                      |
+| `auto_tag`      | enables automatic tagging of images (tag or sha, and `latest`)     | `false`  | `false`           | `PARAMETER_AUTO_TAG`<br>`KANIKO_AUTO_TAG`                      |
 | `build_args`    | variables passed to image at build-time                            | `false`  | `N/A`             | `PARAMETER_BUILD_ARGS`<br>`KANIKO_BUILD_ARGS`                  |
 | `cache`         | enable caching of image layers                                     | `false`  | `false`           | `PARAMETER_CACHE`<br>`KANIKO_CACHE`                            |
 | `cache_repo`    | specific repo to enable caching for                                | `false`  | `N/A`             | `PARAMETER_CACHE_REPO`<br>`KANIKO_CACHE_REPO`                  |
