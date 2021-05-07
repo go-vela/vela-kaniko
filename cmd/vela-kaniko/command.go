@@ -30,3 +30,17 @@ func execCmd(e *exec.Cmd) error {
 
 	return e.Run()
 }
+
+// versionCmd is a helper function to output
+// the client version information.
+func versionCmd() *exec.Cmd {
+	logrus.Trace("creating kaniko version command")
+
+	// variable to store flags for command
+	var flags []string
+
+	// add flag for version kaniko command
+	flags = append(flags, "version")
+
+	return exec.Command(kanikoBin, flags...)
+}
