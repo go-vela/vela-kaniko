@@ -125,6 +125,12 @@ func (p *Plugin) Exec() error {
 		return err
 	}
 
+	// output the kaniko version for troubleshooting
+	err = execCmd(versionCmd())
+	if err != nil {
+		return err
+	}
+
 	// run kaniko command from plugin configuration
 	err = execCmd(p.Command())
 	if err != nil {

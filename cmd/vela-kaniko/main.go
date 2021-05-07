@@ -255,9 +255,9 @@ func run(c *cli.Context) error {
 
 	logrus.WithFields(logrus.Fields{
 		"code":     "https://github.com/go-vela/vela-kaniko",
-		"docs":     "https://go-vela.github.io/docs/plugins/registry/docker",
+		"docs":     "https://go-vela.github.io/docs/plugins/registry/pipeline/kaniko",
 		"registry": "https://hub.docker.com/r/target/vela-kaniko",
-	}).Info("Vela Docker Plugin")
+	}).Info("Vela Kaniko Plugin")
 
 	// create the plugin
 	p := &Plugin{
