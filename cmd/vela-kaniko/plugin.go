@@ -103,6 +103,11 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--registry-mirror=%s", p.Registry.Mirror))
 	}
 
+	// check if retry is set
+	if p.Registry.PushRetry > 0 {
+		flags = append(flags, fmt.Sprintf("--push-retry=%d", p.Registry.PushRetry))
+	}
+
 	// check if the image target is set
 	if len(p.Image.Target) > 0 {
 		// add flag for build stage target from provided image target

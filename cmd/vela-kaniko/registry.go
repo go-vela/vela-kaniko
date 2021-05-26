@@ -39,6 +39,8 @@ type Registry struct {
 	Password string
 	// enable building the image without publishing
 	DryRun bool
+	// number of retries for pushing an image to a remote destination
+	PushRetry int
 }
 
 // Write creates a Docker config.json file for building and publishing the image.

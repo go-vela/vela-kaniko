@@ -28,10 +28,11 @@ func TestDocker_Plugin_Exec_BadWrite(t *testing.T) {
 			Target:     "",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   false,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    false,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -66,10 +67,11 @@ func TestDocker_Plugin_Exec_BadExec(t *testing.T) {
 			Target:     "",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   false,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    false,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -101,10 +103,11 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			Target:     "foo",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   true,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -125,6 +128,7 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--destination=index.docker.io/target/vela-kaniko:v0.0.0",
 		"--dockerfile=Dockerfile",
 		"--no-push",
+		"--push-retry=1",
 		"--target=foo",
 		"--verbosity=info",
 	)
@@ -151,10 +155,11 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 			Dockerfile: "Dockerfile",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   true,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -178,6 +183,7 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 		"--label key1=tag1",
 		"--dockerfile=Dockerfile",
 		"--no-push",
+		"--push-retry=1",
 		"--verbosity=info",
 	)
 
@@ -205,10 +211,11 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 			Target:     "foo",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   true,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -230,6 +237,7 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 		"--destination=index.docker.io/target/vela-kaniko:v0.0.0",
 		"--dockerfile=Dockerfile",
 		"--no-push",
+		"--push-retry=1",
 		"--target=foo",
 		"--verbosity=info",
 	)
@@ -257,11 +265,12 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 			Target:     "foo",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Mirror:   "company.mirror.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   true,
+			Name:      "index.docker.io",
+			Mirror:    "company.mirror.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -283,6 +292,7 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--registry-mirror=company.mirror.io",
+		"--push-retry=1",
 		"--target=foo",
 		"--verbosity=info",
 	)
@@ -310,10 +320,11 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 			Target:     "",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   true,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:   true,
@@ -333,6 +344,7 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 		"--destination=index.docker.io/target/vela-kaniko:7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
 		"--dockerfile=Dockerfile",
 		"--no-push",
+		"--push-retry=1",
 		"--verbosity=info",
 	)
 
@@ -359,10 +371,11 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 			Target:     "",
 		},
 		Registry: &Registry{
-			Name:     "index.docker.io",
-			Username: "octocat",
-			Password: "superSecretPassword",
-			DryRun:   false,
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    false,
+			PushRetry: 1,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -382,6 +395,7 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 		"--destination=index.docker.io/target/vela-kaniko:latest",
 		"--destination=index.docker.io/target/vela-kaniko:7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
 		"--dockerfile=Dockerfile",
+		"--push-retry=1",
 		"--verbosity=info",
 	)
 
