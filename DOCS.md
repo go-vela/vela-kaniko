@@ -39,6 +39,19 @@ steps:
       repo: index.docker.io/octocat/hello-world
 ```
 
+Sample of attempting the publishing of an image three times:
+
+```diff
+steps:
+  - name: publish_hello-world
+    image: target/vela-kaniko:latest
+    pull: always
+    parameters:
++     push_retry: 3
+      registry: index.docker.io
+      repo: index.docker.io/octocat/hello-world
+```
+
 Sample of building and publishing an image with custom tags:
 
 ```diff
@@ -198,6 +211,7 @@ The following parameters are used to configure the image:
 | `log_level`     | set the log level for the plugin                                   | `true`   | `info`            | `PARAMETER_LOG_LEVEL`<br>`KANIKO_LOG_LEVEL`                    |
 | `mirror`        | name of the mirror registry to use                                 | `false`  | `N/A`             | `PARAMETER_MIRROR`<br>`KANIKO_MIRROR`                          |
 | `password`      | password for communication with the registry                       | `true`   | `N/A`             | `PARAMETER_PASSWORD`<br>`KANIKO_PASSWORD`<br>`DOCKER_PASSWORD` |
+| `push_retry`    | number of retries for pushing an image to a remote destination     | `false`  | `0`               | `PARAMETER_PUSH_RETRY`<br>`KANIKO_PUSH_RETRY`                  |
 | `registry`      | name of the registry for the repository                            | `true`   | `index.docker.io` | `PARAMETER_REGISTRY`<br>`KANIKO_REGISTRY`                      |
 | `repo`          | name of the repository for the image                               | `true`   | `N/A`             | `PARAMETER_REPO`<br>`KANIKO_REPO`                              |
 | `sha`           | SHA-1 hash generated for commit                                    | `true`   | **set by Vela**   | `PARAMETER_SHA`<br>`KANIKO_SHA`<br>`VELA_BUILD_COMMIT`         |

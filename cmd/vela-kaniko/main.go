@@ -156,6 +156,12 @@ func main() {
 			Name:     "registry.password",
 			Usage:    "password for communication with the registry",
 		},
+		&cli.IntFlag{
+			EnvVars:  []string{"PARAMETER_PUSH_RETRY", "KANIKO_PUSH_RETRY"},
+			FilePath: "/vela/parameters/kaniko/push_retry,/vela/secrets/kaniko/push_retry",
+			Name:     "registry.push_retry",
+			Usage:    "number of retries for pushing an image to a remote destination",
+		},
 
 		// Repo Flags
 
@@ -277,11 +283,12 @@ func run(c *cli.Context) error {
 		},
 		// registry configuration
 		Registry: &Registry{
-			DryRun:   c.Bool("registry.dry_run"),
-			Name:     c.String("registry.name"),
-			Mirror:   c.String("registry.mirror"),
-			Username: c.String("registry.username"),
-			Password: c.String("registry.password"),
+			DryRun:    c.Bool("registry.dry_run"),
+			Name:      c.String("registry.name"),
+			Mirror:    c.String("registry.mirror"),
+			Username:  c.String("registry.username"),
+			Password:  c.String("registry.password"),
+			PushRetry: c.Int("registry.push_retry"),
 		},
 		// repo configuration
 		Repo: &Repo{
