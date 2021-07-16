@@ -7,13 +7,28 @@ package main
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 
 	"github.com/spf13/afero"
 
 	"github.com/sirupsen/logrus"
 )
 
-var appFS = afero.NewOsFs()
+var (
+	appFS = afero.NewOsFs()
+
+	// nolint:lll // line length exceeds due to links
+	// regular expression to validate docker tags
+	// refs:
+	//  - https://docs.docker.com/engine/reference/commandline/tag/#extended-description
+	//  - https://github.com/distribution/distribution/blob/01f589cf8726565aa3c5c053be12873bafedbedc/reference/regexp.go#L41
+	tagRegexp = regexp.MustCompile(`^[\w][\w.-]{0,127}$`)
+)
+
+// nolint:lll // line length exceeds due to link
+// errTagValidation defines the error message
+// when the provided tag is not allowed.
+const errTagValidation = "tag '%s' not allowed - see https://docs.docker.com/engine/reference/commandline/tag/#extended-description"
 
 // Plugin represents the configuration loaded for the plugin.
 type Plugin struct {
