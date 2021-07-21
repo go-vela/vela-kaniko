@@ -6,7 +6,6 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 
 	"github.com/sirupsen/logrus"
 )
@@ -90,15 +89,10 @@ func (r *Repo) Validate() error {
 
 	// check if tags are provided
 	if len(r.Tags) > 0 {
-		// create regular expression for verifying tags
-		re := regexp.MustCompile(`^[A-Za-z0-9\-\.\_]*$`)
-
-		// nolint
 		// check each tag value for valid docker tag syntax
-		// See docker docs for examples: https://docs.docker.com/engine/reference/commandline/tag/#Extended%20description
 		for _, tag := range r.Tags {
-			if !re.MatchString(tag) {
-				return fmt.Errorf("invalid tag provided: %s (Valid char set: abcdefghijklmnopqrstuvwxyz0123456789_-.ABCDEFGHIJKLMNOPQRSTUVWXY", tag)
+			if !tagRegexp.MatchString(tag) {
+				return fmt.Errorf(errTagValidation, tag)
 			}
 		}
 	}
