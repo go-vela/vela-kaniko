@@ -20,6 +20,8 @@ type Image struct {
 	Dockerfile string
 	// build stage to target for image
 	Target string
+	// enable force adding metadata layers to build image
+	ForceBuildMetadata bool
 }
 
 // Validate verifies the Image is properly configured.

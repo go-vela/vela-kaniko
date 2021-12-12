@@ -122,6 +122,12 @@ func main() {
 			Name:     "image.target",
 			Usage:    "build stage to target for image",
 		},
+		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_FORCE_BUILD_METADATA", "KANIKO_FORCE_BUILD_METADATA"},
+			FilePath: "/vela/parameters/kaniko/force_build_metadata,/vela/secrets/kaniko/force_build_metadata",
+			Name:     "image.force_build_metadata",
+			Usage:    "enables force adding metadata layers to build image",
+		},
 
 		// Registry Flags
 
@@ -276,10 +282,11 @@ func run(c *cli.Context) error {
 		},
 		// image configuration
 		Image: &Image{
-			Args:       c.StringSlice("image.build_args"),
-			Context:    c.String("image.context"),
-			Dockerfile: c.String("image.dockerfile"),
-			Target:     c.String("image.target"),
+			Args:               c.StringSlice("image.build_args"),
+			Context:            c.String("image.context"),
+			Dockerfile:         c.String("image.dockerfile"),
+			Target:             c.String("image.target"),
+			ForceBuildMetadata: c.Bool("image.force_build_metadata"),
 		},
 		// registry configuration
 		Registry: &Registry{

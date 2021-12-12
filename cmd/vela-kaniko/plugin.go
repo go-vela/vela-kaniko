@@ -129,6 +129,11 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--target=%s", p.Image.Target))
 	}
 
+	// check if forcebuildmetadata is set
+	if p.Image.ForceBuildMetadata {
+		flags = append(flags, "--force-build-metadata")
+	}
+
 	// add flag for logging verbosity
 	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
 
