@@ -9,10 +9,11 @@ import "testing"
 func TestDocker_Image_Validate(t *testing.T) {
 	// setup types
 	i := &Image{
-		Args:       []string{},
-		Context:    ".",
-		Dockerfile: "Dockerfile",
-		Target:     "",
+		Args:               []string{},
+		Context:            ".",
+		Dockerfile:         "Dockerfile",
+		Target:             "",
+		ForceBuildMetadata: false,
 	}
 
 	err := i.Validate()
