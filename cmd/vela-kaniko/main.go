@@ -162,6 +162,12 @@ func main() {
 			Name:     "registry.push_retry",
 			Usage:    "number of retries for pushing an image to a remote destination",
 		},
+		&cli.StringSliceFlag{
+			EnvVars:  []string{"PARAMETER_INSECURE_REGISTRIES", "KANIKO_INSECURE_REGISTRIES"},
+			FilePath: "/vela/parameters/kaniko/insecure_registries,/vela/secrets/kaniko/insecure_registries",
+			Name:     "registry.insecure_registries",
+			Usage:    "insecure registries to push & pull from",
+		},
 
 		// Repo Flags
 
@@ -283,12 +289,13 @@ func run(c *cli.Context) error {
 		},
 		// registry configuration
 		Registry: &Registry{
-			DryRun:    c.Bool("registry.dry_run"),
-			Name:      c.String("registry.name"),
-			Mirror:    c.String("registry.mirror"),
-			Username:  c.String("registry.username"),
-			Password:  c.String("registry.password"),
-			PushRetry: c.Int("registry.push_retry"),
+			DryRun:             c.Bool("registry.dry_run"),
+			Name:               c.String("registry.name"),
+			Mirror:             c.String("registry.mirror"),
+			Username:           c.String("registry.username"),
+			Password:           c.String("registry.password"),
+			PushRetry:          c.Int("registry.push_retry"),
+			InsecureRegistries: c.StringSlice("registry.insecure_registries")
 		},
 		// repo configuration
 		Repo: &Repo{
