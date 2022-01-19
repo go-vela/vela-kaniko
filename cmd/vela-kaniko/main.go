@@ -295,7 +295,7 @@ func run(c *cli.Context) error {
 			Username:           c.String("registry.username"),
 			Password:           c.String("registry.password"),
 			PushRetry:          c.Int("registry.push_retry"),
-			InsecureRegistries: c.StringSlice("registry.insecure_registries")
+			InsecureRegistries: c.StringSlice("registry.insecure_registries"),
 		},
 		// repo configuration
 		Repo: &Repo{

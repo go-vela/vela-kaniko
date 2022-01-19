@@ -129,6 +129,14 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--target=%s", p.Image.Target))
 	}
 
+	// check for insecure registries
+	if len(p.Registry.InsecureRegistries) > 0 {
+		for _, registry := range p.Registry.InsecureRegistries {
+			// add flag to allow push/pull from the insecure registry
+			flags = append(flags, fmt.Sprintf("--insecure-registry=%s", registry))
+		}
+	}
+
 	// add flag for logging verbosity
 	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
 
