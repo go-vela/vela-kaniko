@@ -130,11 +130,9 @@ func (p *Plugin) Command() *exec.Cmd {
 	}
 
 	// check for insecure registries
-	if len(p.Registry.InsecureRegistries) > 0 {
-		for _, registry := range p.Registry.InsecureRegistries {
-			// add flag to allow push/pull from the insecure registry
-			flags = append(flags, fmt.Sprintf("--insecure-registry %s", registry))
-		}
+	for _, registry := range p.Registry.InsecureRegistries {
+		// add flag to allow push/pull from the insecure registry
+		flags = append(flags, fmt.Sprintf("--insecure-registry %s", registry))
 	}
 
 	// add flag for logging verbosity
