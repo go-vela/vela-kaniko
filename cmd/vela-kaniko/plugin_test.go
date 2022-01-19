@@ -103,11 +103,12 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			Target:     "foo",
 		},
 		Registry: &Registry{
-			Name:      "index.docker.io",
-			Username:  "octocat",
-			Password:  "superSecretPassword",
-			DryRun:    true,
-			PushRetry: 1,
+			Name:               "index.docker.io",
+			Username:           "octocat",
+			Password:           "superSecretPassword",
+			DryRun:             true,
+			PushRetry:          1,
+			InsecureRegistries: []string{"insecure.docker.local", "docker.local"},
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -130,6 +131,8 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--no-push",
 		"--push-retry=1",
 		"--target=foo",
+		"--insecure-registry insecure.docker.local",
+		"--insecure-registry docker.local",
 		"--verbosity=info",
 	)
 

@@ -133,7 +133,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	if len(p.Registry.InsecureRegistries) > 0 {
 		for _, registry := range p.Registry.InsecureRegistries {
 			// add flag to allow push/pull from the insecure registry
-			flags = append(flags, fmt.Sprintf("--insecure-registry=%s", registry))
+			flags = append(flags, fmt.Sprintf("--insecure-registry %s", registry))
 		}
 	}
 
