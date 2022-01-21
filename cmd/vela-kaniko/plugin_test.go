@@ -131,8 +131,8 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--no-push",
 		"--push-retry=1",
 		"--target=foo",
-		"--insecure-registry insecure.docker.local",
-		"--insecure-registry docker.local",
+		"--insecure-registry=insecure.docker.local",
+		"--insecure-registry=docker.local",
 		"--verbosity=info",
 	)
 
