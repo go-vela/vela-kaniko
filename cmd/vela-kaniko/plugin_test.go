@@ -109,6 +109,8 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			DryRun:             true,
 			PushRetry:          1,
 			InsecureRegistries: []string{"insecure.docker.local", "docker.local"},
+			InsecurePull:       true,
+			InsecurePush:       true,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -133,6 +135,8 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--target=foo",
 		"--insecure-registry=insecure.docker.local",
 		"--insecure-registry=docker.local",
+		"--insecure-pull",
+		"--insecure",
 		"--verbosity=info",
 	)
 

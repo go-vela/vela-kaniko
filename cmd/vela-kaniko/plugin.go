@@ -135,6 +135,18 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--insecure-registry=%s", registry))
 	}
 
+	// check for insecure pulling
+	if p.Registry.InsecurePull {
+		// add flag to allow pulling from any insecure registry
+		flags = append(flags, "--insecure-pull")
+	}
+
+	// check for insecure pushing
+	if p.Registry.InsecurePush {
+		// add flag to allow pushing to any insecure registry
+		flags = append(flags, "--insecure")
+	}
+
 	// add flag for logging verbosity
 	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
 
