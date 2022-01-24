@@ -41,6 +41,12 @@ type Registry struct {
 	DryRun bool
 	// number of retries for pushing an image to a remote destination
 	PushRetry int
+	// insecure registries to push/pull from
+	InsecureRegistries []string
+	// enable pulling from any insecure registry
+	InsecurePull bool
+	// enable pushing to any insecure registry
+	InsecurePush bool
 }
 
 // Write creates a Docker config.json file for building and publishing the image.
