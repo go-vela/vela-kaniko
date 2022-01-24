@@ -122,6 +122,12 @@ func main() {
 			Name:     "image.target",
 			Usage:    "build stage to target for image",
 		},
+		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_CUSTOM_PLATFORM", "KANIKO_CUSTOM_PLATFORM"},
+			FilePath: "/vela/parameters/kaniko/custom_platform,/vela/secrets/kaniko/custom_platform",
+			Name:     "image.custom_platform",
+			Usage:    "custom platform for the image",
+		},
 
 		// Registry Flags
 
@@ -294,10 +300,11 @@ func run(c *cli.Context) error {
 		},
 		// image configuration
 		Image: &Image{
-			Args:       c.StringSlice("image.build_args"),
-			Context:    c.String("image.context"),
-			Dockerfile: c.String("image.dockerfile"),
-			Target:     c.String("image.target"),
+			Args:           c.StringSlice("image.build_args"),
+			Context:        c.String("image.context"),
+			Dockerfile:     c.String("image.dockerfile"),
+			Target:         c.String("image.target"),
+			CustomPlatform: c.String("image.custom_platform"),
 		},
 		// registry configuration
 		Registry: &Registry{
