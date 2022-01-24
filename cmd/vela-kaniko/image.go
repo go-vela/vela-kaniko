@@ -20,6 +20,8 @@ type Image struct {
 	Dockerfile string
 	// build stage to target for image
 	Target string
+	// custom platform for image
+	CustomPlatform string
 }
 
 // Validate verifies the Image is properly configured.
