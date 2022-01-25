@@ -133,6 +133,19 @@ steps:
       repo: index.docker.io/octocat/hello-world
 ```
 
+Sample of building using a custom platform:
+
+```diff
+steps:
+  - name: publish_hello-world
+    image: target/vela-kaniko:latest
+    pull: always
+    parameters:
+      registry: index.docker.io
+      repo: index.docker.io/octocat/hello-world
++     custom_platform: linux/arm64/v8
+```
+
 ## Secrets
 
 > **NOTE:** Users should refrain from configuring sensitive information in your pipeline in plain text.
@@ -220,6 +233,7 @@ The following parameters are used to configure the image:
 | `tags`          | unique tags of the image                                           | `true`   | `latest`          | `PARAMETER_TAGS`<br>`KANIKO_TAGS`                              |
 | `target`        | set the target build stage for the image                           | `false`  | `N/A`             | `PARAMETER_TARGET`<br>`KANIKO_TARGET`                          |
 | `username`      | user name for communication with the registry                      | `true`   | `N/A`             | `PARAMETER_USERNAME`<br>`KANIKO_USERNAME`<br>`DOCKER_USERNAME` |
+| `custom_platform`     | set the custom platform for the image                        | `false`  | `N/A`             | `PARAMETER_CUSTOM_PLATFORM`<br>`KANIKO_CUSTOM_PLATFORM`        |
 
 ## Template
 
