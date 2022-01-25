@@ -423,10 +423,10 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 			Tag:   "v0.0.0",
 		},
 		Image: &Image{
-			Args:       []string{"foo=bar"},
-			Context:    ".",
-			Dockerfile: "Dockerfile",
-			Target:     "foo",
+			Args:           []string{"foo=bar"},
+			Context:        ".",
+			Dockerfile:     "Dockerfile",
+			Target:         "foo",
 			CustomPlatform: "linux/arm64/v8",
 		},
 		Registry: &Registry{
