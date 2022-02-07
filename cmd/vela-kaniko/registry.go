@@ -29,6 +29,8 @@ const (
 //
 // https://docs.docker.com/registry/
 type Registry struct {
+	// insecure registries to push/pull from
+	InsecureRegistries []string
 	// name of the mirror registry to use instead of index.docker.io
 	Mirror string
 	// name of the registry to publish the image to
@@ -38,12 +40,10 @@ type Registry struct {
 	// password for communication with the registry
 	Password string
 	// enable building the image without publishing
+	PushRetry int
+	// enable pulling from any insecure registry
 	DryRun bool
 	// number of retries for pushing an image to a remote destination
-	PushRetry int
-	// insecure registries to push/pull from
-	InsecureRegistries []string
-	// enable pulling from any insecure registry
 	InsecurePull bool
 	// enable pushing to any insecure registry
 	InsecurePush bool
@@ -78,6 +78,7 @@ func (r *Registry) Write() error {
 	// create full path for config.json file
 	path := "/kaniko/.docker/config.json"
 
+	// nolint: gomnd // ignore magic number
 	return a.WriteFile(path, []byte(out), 0644)
 }
 

@@ -36,7 +36,7 @@ var (
 func New() *version.Version {
 	// check if a semantic tag was provided
 	if len(Tag) == 0 {
-		logrus.Warningf("no semantic tag provided - defaulting to v0.0.0")
+		logrus.Warning("no semantic tag provided - defaulting to v0.0.0")
 
 		// set a fallback default for the tag
 		Tag = "v0.0.0"
