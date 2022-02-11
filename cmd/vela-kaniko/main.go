@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -40,7 +40,7 @@ func main() {
 	app.Name = "vela-kaniko"
 	app.HelpName = "vela-kaniko"
 	app.Usage = "Vela Kaniko plugin for building and publishing images"
-	app.Copyright = "Copyright (c) 2021 Target Brands, Inc. All rights reserved."
+	app.Copyright = "Copyright (c) 2022 Target Brands, Inc. All rights reserved."
 	app.Authors = []*cli.Author{
 		{
 			Name:  "Vela Admins",
@@ -128,6 +128,12 @@ func main() {
 			Name:     "image.force_build_metadata",
 			Usage:    "enables force adding metadata layers to build image",
 		},
+		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_CUSTOM_PLATFORM", "KANIKO_CUSTOM_PLATFORM"},
+			FilePath: "/vela/parameters/kaniko/custom_platform,/vela/secrets/kaniko/custom_platform",
+			Name:     "image.custom_platform",
+			Usage:    "custom platform for the image",
+		},
 
 		// Registry Flags
 
@@ -167,6 +173,24 @@ func main() {
 			FilePath: "/vela/parameters/kaniko/push_retry,/vela/secrets/kaniko/push_retry",
 			Name:     "registry.push_retry",
 			Usage:    "number of retries for pushing an image to a remote destination",
+		},
+		&cli.StringSliceFlag{
+			EnvVars:  []string{"PARAMETER_INSECURE_REGISTRIES", "KANIKO_INSECURE_REGISTRIES"},
+			FilePath: "/vela/parameters/kaniko/insecure_registries,/vela/secrets/kaniko/insecure_registries",
+			Name:     "registry.insecure_registries",
+			Usage:    "insecure registries to push & pull from",
+		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_INSECURE_PULL", "KANIKO_INSECURE_PULL"},
+			FilePath: "/vela/parameters/kaniko/insecure_pull,/vela/secrets/kaniko/insecure_pull",
+			Name:     "registry.insecure_pull",
+			Usage:    "enable pulling from insecure registries",
+		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_INSECURE_PUSH", "KANIKO_INSECURE_PUSH"},
+			FilePath: "/vela/parameters/kaniko/insecure_push,/vela/secrets/kaniko/insecure_push",
+			Name:     "registry.insecure_push",
+			Usage:    "enable pushing to insecure registries",
 		},
 
 		// Repo Flags
@@ -287,15 +311,19 @@ func run(c *cli.Context) error {
 			Dockerfile:         c.String("image.dockerfile"),
 			Target:             c.String("image.target"),
 			ForceBuildMetadata: c.Bool("image.force_build_metadata"),
+			CustomPlatform:     c.String("image.custom_platform"),
 		},
 		// registry configuration
 		Registry: &Registry{
-			DryRun:    c.Bool("registry.dry_run"),
-			Name:      c.String("registry.name"),
-			Mirror:    c.String("registry.mirror"),
-			Username:  c.String("registry.username"),
-			Password:  c.String("registry.password"),
-			PushRetry: c.Int("registry.push_retry"),
+			DryRun:             c.Bool("registry.dry_run"),
+			Name:               c.String("registry.name"),
+			Mirror:             c.String("registry.mirror"),
+			Username:           c.String("registry.username"),
+			Password:           c.String("registry.password"),
+			PushRetry:          c.Int("registry.push_retry"),
+			InsecureRegistries: c.StringSlice("registry.insecure_registries"),
+			InsecurePull:       c.Bool("registry.insecure_pull"),
+			InsecurePush:       c.Bool("registry.insecure_push"),
 		},
 		// repo configuration
 		Repo: &Repo{

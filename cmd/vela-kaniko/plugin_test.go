@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -103,11 +103,14 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			Target:     "foo",
 		},
 		Registry: &Registry{
-			Name:      "index.docker.io",
-			Username:  "octocat",
-			Password:  "superSecretPassword",
-			DryRun:    true,
-			PushRetry: 1,
+			Name:               "index.docker.io",
+			Username:           "octocat",
+			Password:           "superSecretPassword",
+			DryRun:             true,
+			PushRetry:          1,
+			InsecureRegistries: []string{"insecure.docker.local", "docker.local"},
+			InsecurePull:       true,
+			InsecurePush:       true,
 		},
 		Repo: &Repo{
 			Cache:     true,
@@ -130,6 +133,10 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--no-push",
 		"--push-retry=1",
 		"--target=foo",
+		"--insecure-registry=insecure.docker.local",
+		"--insecure-registry=docker.local",
+		"--insecure-pull",
+		"--insecure",
 		"--verbosity=info",
 	)
 
@@ -396,6 +403,68 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 		"--destination=index.docker.io/target/vela-kaniko:7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
 		"--dockerfile=Dockerfile",
 		"--push-retry=1",
+		"--verbosity=info",
+	)
+
+	// run test
+	got := p.Command()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
+func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
+	// setup types
+	p := &Plugin{
+		Build: &Build{
+			Event: "tag",
+			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:   "v0.0.0",
+		},
+		Image: &Image{
+			Args:           []string{"foo=bar"},
+			Context:        ".",
+			Dockerfile:     "Dockerfile",
+			Target:         "foo",
+			CustomPlatform: "linux/arm64/v8",
+		},
+		Registry: &Registry{
+			Name:               "index.docker.io",
+			Username:           "octocat",
+			Password:           "superSecretPassword",
+			DryRun:             true,
+			PushRetry:          1,
+			InsecureRegistries: []string{"insecure.docker.local", "docker.local"},
+			InsecurePull:       true,
+			InsecurePush:       true,
+		},
+		Repo: &Repo{
+			Cache:     true,
+			CacheName: "index.docker.io/target/vela-kaniko",
+			Name:      "index.docker.io/target/vela-kaniko",
+			Tags:      []string{"latest"},
+			AutoTag:   true,
+		},
+	}
+
+	want := exec.Command(
+		kanikoBin,
+		"--build-arg=foo=bar",
+		"--cache",
+		"--cache-repo=index.docker.io/target/vela-kaniko",
+		"--context=.",
+		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--destination=index.docker.io/target/vela-kaniko:v0.0.0",
+		"--dockerfile=Dockerfile",
+		"--no-push",
+		"--push-retry=1",
+		"--target=foo",
+		"--customPlatform=linux/arm64/v8",
+		"--insecure-registry=insecure.docker.local",
+		"--insecure-registry=docker.local",
+		"--insecure-pull",
+		"--insecure",
 		"--verbosity=info",
 	)
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -132,6 +132,30 @@ func (p *Plugin) Command() *exec.Cmd {
 	// check if forcebuildmetadata is set
 	if p.Image.ForceBuildMetadata {
 		flags = append(flags, "--force-build-metadata")
+	}
+
+	// check if image custom platform is set
+	if len(p.Image.CustomPlatform) > 0 {
+		// add requested customPlatform flag
+		flags = append(flags, fmt.Sprintf("--customPlatform=%s", p.Image.CustomPlatform))
+	}
+
+	// check for insecure registries
+	for _, registry := range p.Registry.InsecureRegistries {
+		// add flag to allow push/pull from the insecure registry
+		flags = append(flags, fmt.Sprintf("--insecure-registry=%s", registry))
+	}
+
+	// check for insecure pulling
+	if p.Registry.InsecurePull {
+		// add flag to allow pulling from any insecure registry
+		flags = append(flags, "--insecure-pull")
+	}
+
+	// check for insecure pushing
+	if p.Registry.InsecurePush {
+		// add flag to allow pushing to any insecure registry
+		flags = append(flags, "--insecure")
 	}
 
 	// add flag for logging verbosity
