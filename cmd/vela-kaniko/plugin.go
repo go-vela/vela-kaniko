@@ -42,6 +42,7 @@ type Plugin struct {
 	Repo *Repo
 }
 
+// nolint: funlen // ignore length for flags
 // Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
 func (p *Plugin) Command() *exec.Cmd {
@@ -64,7 +65,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	// check if repo caching is enabled
 	if p.Repo.Cache {
 		// add flag for caching from provided repo cache
-		flags = append(flags, fmt.Sprint("--cache"))
+		flags = append(flags, "--cache")
 
 		// check if repo cache name is provided
 		if len(p.Repo.CacheName) > 0 {
