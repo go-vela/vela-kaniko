@@ -130,6 +130,11 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--target=%s", p.Image.Target))
 	}
 
+	// check if forcebuildmetadata is set
+	if p.Image.ForceBuildMetadata {
+		flags = append(flags, "--force-build-metadata")
+	}
+
 	// check if image custom platform is set
 	if len(p.Image.CustomPlatform) > 0 {
 		// add requested customPlatform flag
