@@ -40,7 +40,6 @@ type Plugin struct {
 	Repo *Repo
 }
 
-// nolint: funlen // ignore length for flags
 // Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
 func (p *Plugin) Command() *exec.Cmd {
