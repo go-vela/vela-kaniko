@@ -40,6 +40,7 @@ type Plugin struct {
 	Repo *Repo
 }
 
+// nolint: funlen // ignore length for flags
 // Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
 func (p *Plugin) Command() *exec.Cmd {
@@ -125,6 +126,11 @@ func (p *Plugin) Command() *exec.Cmd {
 	if len(p.Image.Target) > 0 {
 		// add flag for build stage target from provided image target
 		flags = append(flags, fmt.Sprintf("--target=%s", p.Image.Target))
+	}
+
+	// check if forcebuildmetadata is set
+	if p.Image.ForceBuildMetadata {
+		flags = append(flags, "--force-build-metadata")
 	}
 
 	// check if image custom platform is set
