@@ -56,7 +56,6 @@ func main() {
 
 	// Plugin Flags
 
-	// nolint
 	app.Flags = []cli.Flag{
 
 		&cli.StringFlag{

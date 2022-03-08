@@ -17,7 +17,6 @@ import (
 var (
 	appFS = afero.NewOsFs()
 
-	// nolint:lll // line length exceeds due to links
 	// regular expression to validate docker tags
 	// refs:
 	//  - https://docs.docker.com/engine/reference/commandline/tag/#extended-description
@@ -25,7 +24,6 @@ var (
 	tagRegexp = regexp.MustCompile(`^[\w][\w.-]{0,127}$`)
 )
 
-// nolint:lll // line length exceeds due to link
 // errTagValidation defines the error message
 // when the provided tag is not allowed.
 const errTagValidation = "tag '%s' not allowed - see https://docs.docker.com/engine/reference/commandline/tag/#extended-description"
@@ -42,7 +40,6 @@ type Plugin struct {
 	Repo *Repo
 }
 
-// nolint: funlen // ignore length for flags
 // Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
 func (p *Plugin) Command() *exec.Cmd {
