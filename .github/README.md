@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/crates/l/gl.svg)](../LICENSE)
 [![GoDoc](https://godoc.org/github.com/go-vela/vela-kaniko?status.svg)](https://godoc.org/github.com/go-vela/vela-kaniko)
 [![Go Report Card](https://goreportcard.com/badge/go-vela/vela-kaniko)](https://goreportcard.com/report/go-vela/vela-kaniko)
-[![codecov](https://codecov.io/gh/go-vela/vela-kaniko/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-kaniko)
+[![codecov](https://codecov.io/gh/go-vela/vela-kaniko/branch/main/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-kaniko)
 
 Vela plugin designed for building and publishing [Docker](https://www.docker.com/) images.
 
