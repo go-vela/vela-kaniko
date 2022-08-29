@@ -146,6 +146,8 @@ steps:
 +     custom_platform: linux/arm64/v8
 ```
 
+> **NOTE:** This option will only work if your Vela worker is configured appropriately.
+
 ## Secrets
 
 > **NOTE:** Users should refrain from configuring sensitive information in your pipeline in plain text.
