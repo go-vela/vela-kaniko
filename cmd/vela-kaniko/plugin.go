@@ -77,19 +77,6 @@ func (p *Plugin) Command() *exec.Cmd {
 	// add flag for context from provided image context
 	flags = append(flags, fmt.Sprintf("--context=%s", p.Image.Context))
 
-	// check if repo auto tagging is enabled
-	if p.Repo.AutoTag {
-		// check what build event was provided
-		switch p.Build.Event {
-		case "tag":
-			// add build tag to list of repo tags
-			p.Repo.Tags = append(p.Repo.Tags, p.Build.Tag)
-		default:
-			// add build sha to list of repo tags
-			p.Repo.Tags = append(p.Repo.Tags, p.Build.Sha)
-		}
-	}
-
 	// iterate through all repo tags
 	for _, tag := range p.Repo.Tags {
 		// add flag for tag from provided repo tag
