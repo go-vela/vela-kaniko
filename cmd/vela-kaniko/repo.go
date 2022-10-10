@@ -62,8 +62,8 @@ func (r *Repo) AddLabels() []string {
 	}
 }
 
-// ConfigureAutoTag adds the build tag to repo tags.
-func (r *Repo) ConfigureAutoTag(b *Build) {
+// ConfigureAutoTagBuildTags adds the build tag to repo tags.
+func (r *Repo) ConfigureAutoTagBuildTags(b *Build) {
 	// check what build event was provided
 	switch b.Event {
 	case "tag":

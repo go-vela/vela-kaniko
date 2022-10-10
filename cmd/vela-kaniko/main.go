@@ -345,7 +345,7 @@ func run(c *cli.Context) error {
 
 	// check if repo auto tagging is enabled
 	if p.Repo.AutoTag {
-		p.Repo.ConfigureAutoTag(p.Build)
+		p.Repo.ConfigureAutoTagBuildTags(p.Build)
 	}
 
 	// validate the plugin
