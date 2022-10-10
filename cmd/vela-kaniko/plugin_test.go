@@ -547,9 +547,10 @@ func TestDocker_Plugin_Validate_AutoTag_InvalidBuildTag(t *testing.T) {
 	// setup types
 	p := &Plugin{
 		Build: &Build{
-			Event: "push",
-			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
-			Tag:   "-v0.0.0",
+			Event:        "tag",
+			Sha:          "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:          "-v0.0.0",
+			SnapshotMode: "full",
 		},
 		Image: &Image{
 			Args:       []string{"foo=bar"},
@@ -569,6 +570,7 @@ func TestDocker_Plugin_Validate_AutoTag_InvalidBuildTag(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     &Label{},
 		},
 	}
 
