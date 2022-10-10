@@ -345,15 +345,7 @@ func run(c *cli.Context) error {
 
 	// check if repo auto tagging is enabled
 	if p.Repo.AutoTag {
-		// check what build event was provided
-		switch p.Build.Event {
-		case "tag":
-			// add build tag to list of repo tags
-			p.Repo.Tags = append(p.Repo.Tags, p.Build.Tag)
-		default:
-			// add build sha to list of repo tags
-			p.Repo.Tags = append(p.Repo.Tags, p.Build.Sha)
-		}
+		p.Repo.ConfigureAutoTag(p.Build)
 	}
 
 	// validate the plugin
