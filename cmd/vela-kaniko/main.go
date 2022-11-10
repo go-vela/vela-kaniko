@@ -343,6 +343,11 @@ func run(c *cli.Context) error {
 		},
 	}
 
+	// check if repo auto tagging is enabled
+	if p.Repo.AutoTag {
+		p.Repo.ConfigureAutoTagBuildTags(p.Build)
+	}
+
 	// validate the plugin
 	err := p.Validate()
 	if err != nil {

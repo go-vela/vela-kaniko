@@ -62,6 +62,19 @@ func (r *Repo) AddLabels() []string {
 	}
 }
 
+// ConfigureAutoTagBuildTags adds the build tag to repo tags.
+func (r *Repo) ConfigureAutoTagBuildTags(b *Build) {
+	// check what build event was provided
+	switch b.Event {
+	case "tag":
+		// add build tag to list of repo tags
+		r.Tags = append(r.Tags, b.Tag)
+	default:
+		// add build sha to list of repo tags
+		r.Tags = append(r.Tags, b.Sha)
+	}
+}
+
 // Validate verifies the Repo is properly configured.
 func (r *Repo) Validate() error {
 	logrus.Trace("validating repo plugin configuration")

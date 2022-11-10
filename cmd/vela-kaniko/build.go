@@ -50,14 +50,6 @@ func (b *Build) Validate() error {
 		}
 	}
 
-	// check if tag is provided
-	if len(b.Tag) > 0 {
-		// check tag value for valid docker tag syntax
-		if !tagRegexp.MatchString(b.Tag) {
-			return fmt.Errorf(errTagValidation, b.Tag)
-		}
-	}
-
 	return nil
 }
 
