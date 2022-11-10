@@ -231,7 +231,7 @@ The following parameters are used to configure the image:
 | `registry`             | name of the registry for the repository                            | `true`   | `index.docker.io` | `PARAMETER_REGISTRY`<br>`KANIKO_REGISTRY`                         |
 | `repo`                 | name of the repository for the image                               | `true`   | `N/A`             | `PARAMETER_REPO`<br>`KANIKO_REPO`                                 |
 | `sha`                  | SHA-1 hash generated for commit                                    | `true`   | **set by Vela**   | `PARAMETER_SHA`<br>`KANIKO_SHA`<br>`VELA_BUILD_COMMIT`            |
-| `snapshot_mode`        | control how to snapshot the filesystem. - options (full|redo|time) | `false`  | `N/A`             | `PARAMETER_SNAPSHOT_MODE`<br>`KANIKO_SNAPSHOT_MODE`               |
+| `snapshot_mode`        | control how to snapshot the filesystem. - options: `full`, `redo`, or `time` | `false`  | `N/A`             | `PARAMETER_SNAPSHOT_MODE`<br>`KANIKO_SNAPSHOT_MODE`               |
 | `tag`                  | tag generated for build                                            | `false`  | **set by Vela**   | `PARAMETER_TAG`<br>`KANIKO_TAG`<br>`VELA_BUILD_TAG`               |
 | `tags`                 | unique tags of the image                                           | `true`   | `latest`          | `PARAMETER_TAGS`<br>`KANIKO_TAGS`                                 |
 | `target`               | set the target build stage for the image                           | `false`  | `N/A`             | `PARAMETER_TARGET`<br>`KANIKO_TARGET`                             |
