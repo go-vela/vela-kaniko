@@ -92,6 +92,12 @@ func main() {
 			Name:     "build.tag",
 			Usage:    "full tag reference for build (only populated for tag events)",
 		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_USE_NEW_RUN", "KANIKO_USE_NEW_RUN", "VELA_BUILD_USE_NEW_RUN"},
+			FilePath: "/vela/parameters/kaniko/use_new_run,/vela/secrets/kaniko/use_new_run",
+			Name:     "build.use_new_run",
+			Usage:    "use the experimental run implementation for detecting changes without requiring file system snapshots. In some cases, this may improve build performance by 75%.",
+		},
 
 		// Image Flags
 
@@ -302,6 +308,7 @@ func run(c *cli.Context) error {
 			Sha:          c.String("build.sha"),
 			SnapshotMode: c.String("build.snapshot_mode"),
 			Tag:          c.String("build.tag"),
+			UseNewRun:    c.Bool("build.use_new_run"),
 		},
 		// image configuration
 		Image: &Image{

@@ -21,6 +21,8 @@ type Build struct {
 	SnapshotMode string
 	// tag generated for build
 	Tag string
+	// https://github.com/GoogleContainerTools/kaniko#flag---use-new-run
+	UseNewRun bool
 }
 
 // SnapshotModeValues represents the available options for setting a snapshot mode.

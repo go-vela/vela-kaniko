@@ -53,6 +53,10 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--snapshotMode=%s", p.Build.SnapshotMode))
 	}
 
+	if p.Build.UseNewRun {
+		flags = append(flags, "--use-new-run")
+	}
+
 	// iterate through all image build args
 	for _, arg := range p.Image.Args {
 		// add flag for build args from provided image build arg
