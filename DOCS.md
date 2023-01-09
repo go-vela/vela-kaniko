@@ -231,15 +231,16 @@ The following parameters are used to configure the image:
 | `registry`             | name of the registry for the repository                            | `true`   | `index.docker.io` | `PARAMETER_REGISTRY`<br>`KANIKO_REGISTRY`                         |
 | `repo`                 | name of the repository for the image                               | `true`   | `N/A`             | `PARAMETER_REPO`<br>`KANIKO_REPO`                                 |
 | `sha`                  | SHA-1 hash generated for commit                                    | `true`   | **set by Vela**   | `PARAMETER_SHA`<br>`KANIKO_SHA`<br>`VELA_BUILD_COMMIT`            |
-| `snapshot_mode`        | control how to snapshot the filesystem. - options: `full`, `redo`, or `time` | `false`  | `N/A`             | `PARAMETER_SNAPSHOT_MODE`<br>`KANIKO_SNAPSHOT_MODE`               |
+| `use_new_run`          | use experimental run implementation for detecting changes without requiring file system snapshots | `false` | `false` | `PARAMETER_USE_NEW_RUN`<br>`KANIKO_USE_NEW_RUN` |
+| `snapshot_mode`        | control how to snapshot the filesystem. - options: `full`, `redo`, or `time` | `false`  | `N/A`             | `PARAMETER_SNAPSHOT_MODE`<br>`KANIKO_SNAPSHOT_MODE`     |
 | `tag`                  | tag generated for build                                            | `false`  | **set by Vela**   | `PARAMETER_TAG`<br>`KANIKO_TAG`<br>`VELA_BUILD_TAG`               |
 | `tags`                 | unique tags of the image                                           | `true`   | `latest`          | `PARAMETER_TAGS`<br>`KANIKO_TAGS`                                 |
 | `target`               | set the target build stage for the image                           | `false`  | `N/A`             | `PARAMETER_TARGET`<br>`KANIKO_TARGET`                             |
 | `username`             | user name for communication with the registry                      | `true`   | `N/A`             | `PARAMETER_USERNAME`<br>`KANIKO_USERNAME`<br>`DOCKER_USERNAME`    |
-| `custom_platform`     | set the custom platform for the image                               | `false`  | `N/A`             | `PARAMETER_CUSTOM_PLATFORM`<br>`KANIKO_CUSTOM_PLATFORM`           |
-| `insecure_registries` | insecure docker registries to push or pull to/from                  | `false`  | `empty slice`     | `PARAMETER_INSECURE_REGISTRIES`<br>`KANIKO_INSECURE_REGISTRIES`   |
-| `insecure_pull`       | enable pulling from any insecure registry                           | `false`  | `false`           | `PARAMETER_INSECURE_PULL`<br>`KANIKO_INSECURE_PULL`               |
-| `insecure_push`       | enable pushing to any insecure registry                             | `false`  | `false`           | `PARAMETER_INSECURE_PUSH`<br>`KANIKO_INSECURE_PUSH`               |
+| `custom_platform`      | set the custom platform for the image                               | `false`  | `N/A`             | `PARAMETER_CUSTOM_PLATFORM`<br>`KANIKO_CUSTOM_PLATFORM`           |
+| `insecure_registries`  | insecure docker registries to push or pull to/from                  | `false`  | `empty slice`     | `PARAMETER_INSECURE_REGISTRIES`<br>`KANIKO_INSECURE_REGISTRIES`   |
+| `insecure_pull`        | enable pulling from any insecure registry                           | `false`  | `false`           | `PARAMETER_INSECURE_PULL`<br>`KANIKO_INSECURE_PULL`               |
+| `insecure_push`        | enable pushing to any insecure registry                             | `false`  | `false`           | `PARAMETER_INSECURE_PUSH`<br>`KANIKO_INSECURE_PUSH`               |
 
 ## Template
 
