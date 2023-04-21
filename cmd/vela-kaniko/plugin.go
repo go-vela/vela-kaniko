@@ -57,6 +57,10 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, "--use-new-run")
 	}
 
+	if p.Build.SingleSnapshot {
+		flags = append(flags, "--single-snapshot")
+	}
+
 	// iterate through all image build args
 	for _, arg := range p.Image.Args {
 		// add flag for build args from provided image build arg
