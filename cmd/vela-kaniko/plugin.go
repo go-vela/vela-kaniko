@@ -57,6 +57,10 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, "--use-new-run")
 	}
 
+	if len(p.Build.TarPath) > 0 {
+		flags = append(flags, fmt.Sprintf("--tar-path=%s", p.Build.TarPath))
+	}
+
 	// iterate through all image build args
 	for _, arg := range p.Image.Args {
 		// add flag for build args from provided image build arg

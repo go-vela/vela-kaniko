@@ -23,6 +23,8 @@ type Build struct {
 	Tag string
 	// https://github.com/GoogleContainerTools/kaniko#flag---use-new-run
 	UseNewRun bool
+	// https://github.com/GoogleContainerTools/kaniko#flag---tar-path
+	TarPath string
 }
 
 // SnapshotModeValues represents the available options for setting a snapshot mode.
