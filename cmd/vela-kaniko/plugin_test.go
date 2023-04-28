@@ -359,7 +359,7 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 
 	want := exec.Command(
 		kanikoBin,
-		"--snapshotMode=redo",
+		"--snapshot-mode=redo",
 		"--build-arg=foo=bar",
 		"--cache",
 		"--cache-repo=index.docker.io/target/vela-kaniko",
