@@ -104,6 +104,12 @@ func main() {
 			Name:     "build.tar_path",
 			Usage:    "If set, the image will be saved as a tarball at that path. ",
 		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_SINGLE_SNAPSHOT", "KANIKO_SINGLE_SNAPSHOT", "VELA_BUILD_SINGLE_SNAPSHOT"},
+			FilePath: "/vela/parameters/kaniko/single_snapshot,/vela/secrets/kaniko/single_snapshot",
+			Name:     "build.single_snapshot",
+			Usage:    "takes a single snapshot of the filesystem at the end of the build, so only one layer will be appended to the base image",
+		},
 
 		// Image Flags
 
@@ -310,12 +316,13 @@ func run(c *cli.Context) error {
 	p := &Plugin{
 		// build configuration
 		Build: &Build{
-			Event:        c.String("build.event"),
-			Sha:          c.String("build.sha"),
-			SnapshotMode: c.String("build.snapshot_mode"),
-			Tag:          c.String("build.tag"),
-			UseNewRun:    c.Bool("build.use_new_run"),
-			TarPath:      c.String("build.tar_path"),
+			Event:          c.String("build.event"),
+			Sha:            c.String("build.sha"),
+			SnapshotMode:   c.String("build.snapshot_mode"),
+			Tag:            c.String("build.tag"),
+			UseNewRun:      c.Bool("build.use_new_run"),
+			TarPath:        c.String("build.tar_path"),
+			SingleSnapshot: c.Bool("build.single_snapshot"),
 		},
 		// image configuration
 		Image: &Image{
