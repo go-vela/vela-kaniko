@@ -243,6 +243,12 @@ func main() {
 			Name:     "repo.labels",
 			Usage:    "repository labels of the image",
 		},
+		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_REPO_TOPICS_FILTER", "KANIKO_REPO_TOPICS_FILTER"},
+			FilePath: "/vela/parameters/kaniko/repo_topics_filter,/vela/secrets/kaniko/repo_topics_filter",
+			Name:     "repo.topics_filter",
+			Usage:    "filter to restrict which repository topics to include in label",
+		},
 
 		// extract vars for open image specification labeling
 		&cli.StringFlag{
@@ -269,6 +275,11 @@ func main() {
 			EnvVars: []string{"VELA_REPO_LINK"},
 			Name:    "label.url",
 			Usage:   "direct url of the repository",
+		},
+		&cli.StringSliceFlag{
+			EnvVars: []string{"VELA_REPO_TOPICS"},
+			Name:    "label.topics",
+			Usage:   "topics of the repository",
 		},
 	}
 
@@ -340,17 +351,19 @@ func run(c *cli.Context) error {
 		},
 		// repo configuration
 		Repo: &Repo{
-			AutoTag:   c.Bool("repo.auto_tag"),
-			Cache:     c.Bool("repo.cache"),
-			CacheName: c.String("repo.cache_name"),
-			Name:      c.String("repo.name"),
-			Tags:      c.StringSlice("repo.tags"),
+			AutoTag:      c.Bool("repo.auto_tag"),
+			Cache:        c.Bool("repo.cache"),
+			CacheName:    c.String("repo.cache_name"),
+			Name:         c.String("repo.name"),
+			Tags:         c.StringSlice("repo.tags"),
+			TopicsFilter: c.String("repo.topics_filter"),
 			Label: &Label{
 				AuthorEmail: c.String("label.author_email"),
 				Commit:      c.String("label.commit"),
 				Created:     time.Now().Format(time.RFC3339),
 				FullName:    c.String("label.full_name"),
 				Number:      c.Int("label.number"),
+				Topics:      c.StringSlice("label.topics"),
 				URL:         c.String("label.url"),
 			},
 			Labels: c.StringSlice("repo.labels"),
