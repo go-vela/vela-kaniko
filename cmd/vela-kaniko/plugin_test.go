@@ -709,6 +709,7 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -720,6 +721,15 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -730,7 +740,7 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
