@@ -161,8 +161,6 @@ steps:
       repo: index.docker.io/octocat/hello-world
 ```
 
-> **NOTE:** This option will only work if your Vela worker is configured appropriately.
-
 ## Secrets
 
 > **NOTE:** Users should refrain from configuring sensitive information in your pipeline in plain text.
