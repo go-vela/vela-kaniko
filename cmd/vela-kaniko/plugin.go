@@ -50,11 +50,18 @@ func (p *Plugin) Command() *exec.Cmd {
 
 	// check if the snapshot mode is set
 	if len(p.Build.SnapshotMode) != 0 {
-		flags = append(flags, fmt.Sprintf("--snapshotMode=%s", p.Build.SnapshotMode))
+		flags = append(flags, fmt.Sprintf("--snapshot-mode=%s", p.Build.SnapshotMode))
 	}
 
 	if p.Build.UseNewRun {
 		flags = append(flags, "--use-new-run")
+	}
+
+	if len(p.Build.TarPath) > 0 {
+		flags = append(flags, fmt.Sprintf("--tar-path=%s", p.Build.TarPath))
+	}
+	if p.Build.SingleSnapshot {
+		flags = append(flags, "--single-snapshot")
 	}
 
 	// iterate through all image build args
