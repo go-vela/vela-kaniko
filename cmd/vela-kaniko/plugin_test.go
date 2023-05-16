@@ -6,7 +6,6 @@ package main
 
 import (
 	"os/exec"
-	"reflect"
 	"strings"
 	"testing"
 
@@ -118,6 +117,7 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -128,6 +128,15 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -142,7 +151,7 @@ func TestDocker_Plugin_Command(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -177,6 +186,7 @@ func TestDocker_Plugin_Command_AutoTag_TagBuild(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -191,6 +201,15 @@ func TestDocker_Plugin_Command_AutoTag_TagBuild(t *testing.T) {
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
 		"--destination=index.docker.io/target/vela-kaniko:v0.0.0",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -205,7 +224,7 @@ func TestDocker_Plugin_Command_AutoTag_TagBuild(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -240,6 +259,7 @@ func TestDocker_Plugin_Command_AutoTag_PushBuild(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -254,6 +274,15 @@ func TestDocker_Plugin_Command_AutoTag_PushBuild(t *testing.T) {
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
 		"--destination=index.docker.io/target/vela-kaniko:7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -268,7 +297,7 @@ func TestDocker_Plugin_Command_AutoTag_PushBuild(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -299,7 +328,7 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
-			Label:     &Label{},
+			Label:     testLabel(),
 			Labels:    []string{"key1=tag1"},
 		},
 	}
@@ -312,6 +341,204 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
 		"--label key1=tag1",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
+		"--dockerfile=Dockerfile",
+		"--no-push",
+		"--push-retry=1",
+		"--verbosity=info",
+	)
+
+	// run test
+	got := p.Command()
+
+	if !strings.EqualFold(got.String(), want.String()) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
+func TestDocker_Plugin_Command_With_MultipleTopics(t *testing.T) {
+	// setup types
+	label := testLabel()
+	label.Topics = []string{"foo", "bar"}
+
+	p := &Plugin{
+		Build: &Build{
+			Event: "tag",
+			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:   "v0.0.0",
+		},
+		Image: &Image{
+			Args:       []string{"foo=bar"},
+			Context:    ".",
+			Dockerfile: "Dockerfile",
+		},
+		Registry: &Registry{
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
+		},
+		Repo: &Repo{
+			Cache:     true,
+			CacheName: "index.docker.io/target/vela-kaniko",
+			Name:      "index.docker.io/target/vela-kaniko",
+			Tags:      []string{"latest"},
+			AutoTag:   true,
+			Label:     label,
+		},
+	}
+
+	want := exec.Command(
+		kanikoBin,
+		"--build-arg=foo=bar",
+		"--cache",
+		"--cache-repo=index.docker.io/target/vela-kaniko",
+		"--context=.",
+		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=foo,bar",
+		"--dockerfile=Dockerfile",
+		"--no-push",
+		"--push-retry=1",
+		"--verbosity=info",
+	)
+
+	// run test
+	got := p.Command()
+
+	if !strings.EqualFold(got.String(), want.String()) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
+func TestDocker_Plugin_Command_With_MultipleTopicsWithFilter(t *testing.T) {
+	// setup types
+	label := testLabel()
+	label.Topics = []string{"id123", "bar"}
+
+	p := &Plugin{
+		Build: &Build{
+			Event: "tag",
+			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:   "v0.0.0",
+		},
+		Image: &Image{
+			Args:       []string{"foo=bar"},
+			Context:    ".",
+			Dockerfile: "Dockerfile",
+		},
+		Registry: &Registry{
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
+		},
+		Repo: &Repo{
+			Cache:        true,
+			CacheName:    "index.docker.io/target/vela-kaniko",
+			Name:         "index.docker.io/target/vela-kaniko",
+			Tags:         []string{"latest"},
+			AutoTag:      true,
+			TopicsFilter: "^id",
+			Label:        label,
+		},
+	}
+
+	want := exec.Command(
+		kanikoBin,
+		"--build-arg=foo=bar",
+		"--cache",
+		"--cache-repo=index.docker.io/target/vela-kaniko",
+		"--context=.",
+		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
+		"--dockerfile=Dockerfile",
+		"--no-push",
+		"--push-retry=1",
+		"--verbosity=info",
+	)
+
+	// run test
+	got := p.Command()
+
+	if !strings.EqualFold(got.String(), want.String()) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
+func TestDocker_Plugin_Command_With_MultipleTopicsNoTopics(t *testing.T) {
+	// setup types
+	label := testLabel()
+	label.Topics = []string{}
+
+	p := &Plugin{
+		Build: &Build{
+			Event: "tag",
+			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:   "v0.0.0",
+		},
+		Image: &Image{
+			Args:       []string{"foo=bar"},
+			Context:    ".",
+			Dockerfile: "Dockerfile",
+		},
+		Registry: &Registry{
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
+		},
+		Repo: &Repo{
+			Cache:     true,
+			CacheName: "index.docker.io/target/vela-kaniko",
+			Name:      "index.docker.io/target/vela-kaniko",
+			Tags:      []string{"latest"},
+			AutoTag:   true,
+			Label:     label,
+		},
+	}
+
+	want := exec.Command(
+		kanikoBin,
+		"--build-arg=foo=bar",
+		"--cache",
+		"--cache-repo=index.docker.io/target/vela-kaniko",
+		"--context=.",
+		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -354,6 +581,7 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -365,6 +593,15 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -375,7 +612,7 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -408,6 +645,7 @@ func TestDocker_Plugin_Command_With_UseNewRun(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -419,6 +657,15 @@ func TestDocker_Plugin_Command_With_UseNewRun(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -429,7 +676,7 @@ func TestDocker_Plugin_Command_With_UseNewRun(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -462,6 +709,7 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -473,6 +721,15 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -483,7 +740,7 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -516,6 +773,7 @@ func TestDocker_Plugin_Command_With_UseSingleSnapshot(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -527,6 +785,15 @@ func TestDocker_Plugin_Command_With_UseSingleSnapshot(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -537,7 +804,71 @@ func TestDocker_Plugin_Command_With_UseSingleSnapshot(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
+func TestDocker_Plugin_Command_With_ForceBuildMetaData(t *testing.T) {
+	// setup types
+	p := &Plugin{
+		Build: &Build{
+			Event: "tag",
+			Sha:   "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+			Tag:   "v0.0.0",
+		},
+		Image: &Image{
+			Args:               []string{"foo=bar"},
+			Context:            ".",
+			Dockerfile:         "Dockerfile",
+			Target:             "foo",
+			ForceBuildMetadata: true,
+		},
+		Registry: &Registry{
+			Name:      "index.docker.io",
+			Username:  "octocat",
+			Password:  "superSecretPassword",
+			DryRun:    true,
+			PushRetry: 1,
+		},
+		Repo: &Repo{
+			Cache:     true,
+			CacheName: "index.docker.io/target/vela-kaniko",
+			Name:      "index.docker.io/target/vela-kaniko",
+			Tags:      []string{"latest"},
+			AutoTag:   true,
+			Label:     testLabel(),
+		},
+	}
+
+	want := exec.Command(
+		kanikoBin,
+		"--build-arg=foo=bar",
+		"--cache",
+		"--cache-repo=index.docker.io/target/vela-kaniko",
+		"--context=.",
+		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
+		"--dockerfile=Dockerfile",
+		"--no-push",
+		"--push-retry=1",
+		"--target=foo",
+		"--force-build-metadata",
+		"--verbosity=info",
+	)
+
+	// run test
+	got := p.Command()
+
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -570,6 +901,7 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -580,6 +912,15 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--registry-mirror=company.mirror.io",
@@ -591,7 +932,7 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -622,6 +963,7 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 			Name:    "index.docker.io/target/vela-kaniko",
 			Tags:    []string{"latest"},
 			AutoTag: true,
+			Label:   testLabel(),
 		},
 	}
 
@@ -632,6 +974,15 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -641,7 +992,7 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -673,6 +1024,7 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -683,6 +1035,15 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--push-retry=1",
 		"--verbosity=info",
@@ -691,7 +1052,7 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -727,6 +1088,7 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 			Name:      "index.docker.io/target/vela-kaniko",
 			Tags:      []string{"latest"},
 			AutoTag:   true,
+			Label:     testLabel(),
 		},
 	}
 
@@ -737,6 +1099,15 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 		"--cache-repo=index.docker.io/target/vela-kaniko",
 		"--context=.",
 		"--destination=index.docker.io/target/vela-kaniko:latest",
+		"--label org.opencontainers.image.created=now",
+		"--label org.opencontainers.image.url=git.example.com",
+		"--label org.opencontainers.image.revision=deadbeef",
+		"--label io.vela.build.author=octocat@example.com",
+		"--label io.vela.build.number=1",
+		"--label io.vela.build.repo=octocat/scripts",
+		"--label io.vela.build.commit=deadbeef",
+		"--label io.vela.build.url=git.example.com",
+		"--label io.vela.build.topics=id123",
 		"--dockerfile=Dockerfile",
 		"--no-push",
 		"--push-retry=1",
@@ -752,7 +1123,7 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 	// run test
 	got := p.Command()
 
-	if !reflect.DeepEqual(got, want) {
+	if !strings.EqualFold(got.String(), want.String()) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
@@ -950,5 +1321,17 @@ func TestDocker_Plugin_Validate_NoRepo(t *testing.T) {
 	err := p.Validate()
 	if err == nil {
 		t.Errorf("Validate should have returned err")
+	}
+}
+
+func testLabel() *Label {
+	return &Label{
+		AuthorEmail: "octocat@example.com",
+		Commit:      "deadbeef",
+		Created:     "now",
+		FullName:    "octocat/scripts",
+		Number:      1,
+		Topics:      []string{"id123"},
+		URL:         "git.example.com",
 	}
 }

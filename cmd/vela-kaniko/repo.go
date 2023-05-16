@@ -6,6 +6,8 @@ package main
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -19,17 +21,20 @@ type (
 		Cache bool
 		// enable caching of image layers for a specific repo
 		CacheName string
-		// name of the repository for the image
-		Name string
-		// tags of the image for the repository
-		Tags []string
 		// used for translating the pre-defined image labels
 		Label *Label
 		// labels of the image for the repository
 		Labels []string
+		// name of the repository for the image
+		Name string
+		// tags of the image for the repository
+		Tags []string
+		// a filter for topics
+		TopicsFilter string
 	}
 
 	// Label represents the open image specification fields.
+	// Note: these are populated by Vela build variables.
 	Label struct {
 		// author from the source commit
 		AuthorEmail string
@@ -41,16 +46,23 @@ type (
 		FullName string
 		// build number from vela
 		Number int
+		// topics attached to repository
+		Topics []string
 		// direct url of the repository
 		URL string
 	}
 )
 
-// AddLabels adds open container spec labels to plugin
-//
-// https://github.com/opencontainers/image-spec/blob/v1.0.1/annotations.md
+// AddLabels container labels to the image.
 func (r *Repo) AddLabels() []string {
-	return []string{
+	// store all the topics
+	topics := r.Label.Topics
+	// labels we will return
+	labels := []string{}
+
+	// append the standard set of labels
+	labels = append(
+		labels,
 		fmt.Sprintf("org.opencontainers.image.created=%s", r.Label.Created),
 		fmt.Sprintf("org.opencontainers.image.url=%s", r.Label.URL),
 		fmt.Sprintf("org.opencontainers.image.revision=%s", r.Label.Commit),
@@ -59,7 +71,31 @@ func (r *Repo) AddLabels() []string {
 		fmt.Sprintf("io.vela.build.repo=%s", r.Label.FullName),
 		fmt.Sprintf("io.vela.build.commit=%s", r.Label.Commit),
 		fmt.Sprintf("io.vela.build.url=%s", r.Label.URL),
+	)
+
+	// if a filter is defined, use it to only
+	// include those that match the filter
+	if len(r.TopicsFilter) > 0 {
+		// clear out current topics
+		topics = []string{}
+		// we already confirmed validity of regex expression in
+		// .Validate, so we skip the error check here
+		re, _ := regexp.Compile(r.TopicsFilter)
+		for _, topic := range r.Label.Topics {
+			if re.MatchString(topic) {
+				topics = append(topics, topic)
+			}
+		}
 	}
+
+	// only append topics if we have any, since the possibility of
+	// it being empty is much higher than any of the other fields
+	// that are derived from standard Vela build variables
+	if len(topics) > 0 {
+		labels = append(labels, fmt.Sprintf("io.vela.build.topics=%s", strings.Join(topics, ",")))
+	}
+
+	return labels
 }
 
 // ConfigureAutoTagBuildTags adds the build tag to repo tags.
@@ -110,8 +146,13 @@ func (r *Repo) Validate() error {
 		}
 	}
 
-	// add pre-defined labels
-	r.Labels = append(r.Labels, r.AddLabels()...)
+	// check validity of regex expression for topics
+	if len(r.TopicsFilter) > 0 {
+		_, err := regexp.Compile(r.TopicsFilter)
+		if err != nil {
+			return fmt.Errorf("topics filter regex not valid")
+		}
+	}
 
 	return nil
 }

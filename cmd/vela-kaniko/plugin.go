@@ -94,6 +94,9 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo.Name, tag))
 	}
 
+	// add predefined labels to user provided labels
+	p.Repo.Labels = append(p.Repo.Labels, p.Repo.AddLabels()...)
+
 	// iterate through all repo labels
 	for _, label := range p.Repo.Labels {
 		// add flag for tag from provided repo tag

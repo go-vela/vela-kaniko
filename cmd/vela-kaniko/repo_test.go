@@ -86,3 +86,63 @@ func TestDocker_Repo_Validate_NoTags(t *testing.T) {
 		t.Errorf("Validate should have returned err")
 	}
 }
+
+func TestDocker_Repo_Validate_BadTopicsFilter(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:        true,
+		CacheName:    "",
+		Name:         "index.docker.io/target/vela-kaniko",
+		Tags:         []string{},
+		AutoTag:      true,
+		TopicsFilter: "?()",
+		Label: &Label{
+			Topics: []string{},
+		},
+	}
+
+	err := r.Validate()
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDocker_Repo_Validate_ValidTopicsFilter(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:        true,
+		CacheName:    "",
+		Name:         "index.docker.io/target/vela-kaniko",
+		Tags:         []string{},
+		AutoTag:      true,
+		TopicsFilter: "^id",
+		Label: &Label{
+			Topics: []string{"id123"},
+		},
+	}
+
+	err := r.Validate()
+	if err != nil {
+		t.Errorf("Validate should not have returned err")
+	}
+}
+
+func TestDocker_Repo_Validate_SingleLabel(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:        true,
+		CacheName:    "",
+		Name:         "index.docker.io/target/vela-kaniko",
+		Tags:         []string{},
+		AutoTag:      true,
+		TopicsFilter: "^id",
+		Label: &Label{
+			Topics: []string{"id123"},
+		},
+	}
+
+	err := r.Validate()
+	if err != nil {
+		t.Errorf("Validate should not have returned err")
+	}
+}
