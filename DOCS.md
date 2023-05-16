@@ -146,6 +146,8 @@ steps:
 +     custom_platform: linux/arm64/v8
 ```
 
+> **NOTE:** This option will only work if your Vela worker is configured appropriately.
+
 Sample of only including repository topics starting with "id" as a value in the "io.vela.build.topics" that gets applied to the built image:
 
 ```diff
@@ -158,8 +160,6 @@ steps:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
 ```
-
-> **NOTE:** This option will only work if your Vela worker is configured appropriately.
 
 ## Secrets
 
