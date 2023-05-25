@@ -1112,7 +1112,7 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 		"--no-push",
 		"--push-retry=1",
 		"--target=foo",
-		"--customPlatform=linux/arm64/v8",
+		"--custom-platform=linux/arm64/v8",
 		"--insecure-registry=insecure.docker.local",
 		"--insecure-registry=docker.local",
 		"--insecure-pull",

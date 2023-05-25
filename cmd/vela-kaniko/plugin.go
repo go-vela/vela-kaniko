@@ -136,7 +136,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	// check if image custom platform is set
 	if len(p.Image.CustomPlatform) > 0 {
 		// add requested customPlatform flag
-		flags = append(flags, fmt.Sprintf("--customPlatform=%s", p.Image.CustomPlatform))
+		flags = append(flags, fmt.Sprintf("--custom-platform=%s", p.Image.CustomPlatform))
 	}
 
 	// check for insecure registries
