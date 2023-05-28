@@ -21,9 +21,9 @@ type (
 		Cache bool
 		// enable caching of image layers for a specific repo
 		CacheName string
-		// type of compression - 'gzip' (default) or 'zstd'
+		// type of compression - 'gzip' (default if not defined) or 'zstd'
 		Compression string
-		// level of compression - 1 to 19 (inclusive), default is -1
+		// level of compression - 1 to 19 (inclusive)
 		CompressionLevel int
 		// used for translating the pre-defined image labels
 		Label *Label
