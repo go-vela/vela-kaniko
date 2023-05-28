@@ -165,9 +165,9 @@ func (r *Repo) Validate() error {
 		}
 	}
 
-	// make sure compression level is between 1 and 19
-	if r.CompressionLevel > 0 && r.CompressionLevel > 19 {
-		return fmt.Errorf("compression-level can't exceed 19")
+	// make sure compression level is between 1 and 9 inclusive
+	if r.CompressionLevel > 0 && r.CompressionLevel > 9 {
+		return fmt.Errorf("compression-level can't exceed 9")
 	}
 
 	return nil
