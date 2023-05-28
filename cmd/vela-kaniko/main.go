@@ -240,7 +240,7 @@ func main() {
 			EnvVars:  []string{"PARAMETER_COMPRESSION_LEVEL", "KANIKO_COMPRESSION_LEVEL"},
 			FilePath: "/vela/parameters/kaniko/compression_level,/vela/secrets/kaniko/compression_level",
 			Name:     "repo.compression_level",
-			Usage:    "set the compression level (1-19)",
+			Usage:    "set the compression level (1-9, inclusive)",
 		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_REPO", "KANIKO_REPO"},
