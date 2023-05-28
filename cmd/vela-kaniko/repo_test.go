@@ -202,13 +202,32 @@ func TestDocker_Repo_CompressionLevel(t *testing.T) {
 	}
 }
 
-func TestDocker_Repo_BadCompressionLevel(t *testing.T) {
+func TestDocker_Repo_CompressionLevelTooHigh(t *testing.T) {
 	// setup types
 	r := &Repo{
 		Cache:            true,
 		CacheName:        "index.docker.io/target/vela-kaniko",
 		Compression:      "zstd",
 		CompressionLevel: 50,
+		Name:             "index.docker.io/target/vela-kaniko",
+		Tags:             []string{"latest"},
+		AutoTag:          true,
+		Label:            &Label{},
+	}
+
+	err := r.Validate()
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDocker_Repo_CompressionLevelTooLow(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:            true,
+		CacheName:        "index.docker.io/target/vela-kaniko",
+		Compression:      "zstd",
+		CompressionLevel: -1,
 		Name:             "index.docker.io/target/vela-kaniko",
 		Tags:             []string{"latest"},
 		AutoTag:          true,

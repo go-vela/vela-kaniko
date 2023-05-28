@@ -161,13 +161,13 @@ func (r *Repo) Validate() error {
 	// make sure a valid compression type was provided, if any
 	if len(r.Compression) > 0 {
 		if r.Compression != "gzip" && r.Compression != "zstd" {
-			return fmt.Errorf("compression has to be one of 'gzip' or 'zstd'")
+			return fmt.Errorf("compression must be one of 'gzip' or 'zstd'")
 		}
 	}
 
 	// make sure compression level is between 1 and 9 inclusive
-	if r.CompressionLevel > 0 && r.CompressionLevel > 9 {
-		return fmt.Errorf("compression-level can't exceed 9")
+	if r.CompressionLevel < 1 || r.CompressionLevel > 9 {
+		return fmt.Errorf("compression-level must be between 1 - 9 inclusive")
 	}
 
 	return nil
