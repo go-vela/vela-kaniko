@@ -50,9 +50,10 @@ func TestDocker_Build_Validate_NoSha(t *testing.T) {
 func TestDocker_Build_Validate_InvalidSnapshotMode(t *testing.T) {
 	// setup types
 	b := &Build{
+		Sha:          "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
 		Event:        "push",
 		Tag:          "v0.0.0",
-		SnapshotMode: "redo",
+		SnapshotMode: "foo",
 	}
 
 	err := b.Validate()
