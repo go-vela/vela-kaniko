@@ -23,7 +23,7 @@ type (
 		CacheName string
 		// type of compression - 'gzip' (default if not defined) or 'zstd'
 		Compression string
-		// level of compression - 1 to 19 (inclusive)
+		// level of compression - 1 to 9 (inclusive)
 		CompressionLevel int
 		// used for translating the pre-defined image labels
 		Label *Label
