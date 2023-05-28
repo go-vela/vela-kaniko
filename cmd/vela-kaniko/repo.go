@@ -166,8 +166,10 @@ func (r *Repo) Validate() error {
 	}
 
 	// make sure compression level is between 1 and 9 inclusive
-	if r.CompressionLevel < 1 || r.CompressionLevel > 9 {
-		return fmt.Errorf("compression-level must be between 1 - 9 inclusive")
+	if r.CompressionLevel != 0 {
+		if r.CompressionLevel < 1 || r.CompressionLevel > 9 {
+			return fmt.Errorf("compression-level must be between 1 - 9 inclusive")
+		}
 	}
 
 	return nil

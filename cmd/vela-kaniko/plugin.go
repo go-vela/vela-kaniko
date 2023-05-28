@@ -86,6 +86,16 @@ func (p *Plugin) Command() *exec.Cmd {
 		}
 	}
 
+	// check if compression is provided
+	if len(p.Repo.Compression) > 0 {
+		flags = append(flags, fmt.Sprintf("--compression=%s", p.Repo.Compression))
+	}
+
+	// check if compression_level is provided
+	if p.Repo.CompressionLevel != 0 {
+		flags = append(flags, fmt.Sprintf("--compression-level=%d", p.Repo.CompressionLevel))
+	}
+
 	// add flag for context from provided image context
 	flags = append(flags, fmt.Sprintf("--context=%s", p.Image.Context))
 
