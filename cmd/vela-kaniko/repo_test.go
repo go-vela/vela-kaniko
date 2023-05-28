@@ -146,3 +146,77 @@ func TestDocker_Repo_Validate_SingleLabel(t *testing.T) {
 		t.Errorf("Validate should not have returned err")
 	}
 }
+
+func TestDocker_Repo_Compression(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:       true,
+		CacheName:   "index.docker.io/target/vela-kaniko",
+		Compression: "zstd",
+		Name:        "index.docker.io/target/vela-kaniko",
+		Tags:        []string{"latest"},
+		AutoTag:     true,
+		Label:       &Label{},
+	}
+
+	err := r.Validate()
+	if err != nil {
+		t.Errorf("Validate returned err: %v", err)
+	}
+}
+
+func TestDocker_Repo_BadCompression(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:       true,
+		CacheName:   "index.docker.io/target/vela-kaniko",
+		Compression: "foo",
+		Name:        "index.docker.io/target/vela-kaniko",
+		Tags:        []string{"latest"},
+		AutoTag:     true,
+		Label:       &Label{},
+	}
+
+	err := r.Validate()
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDocker_Repo_CompressionLevel(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:            true,
+		CacheName:        "index.docker.io/target/vela-kaniko",
+		Compression:      "zstd",
+		CompressionLevel: 2,
+		Name:             "index.docker.io/target/vela-kaniko",
+		Tags:             []string{"latest"},
+		AutoTag:          true,
+		Label:            &Label{},
+	}
+
+	err := r.Validate()
+	if err != nil {
+		t.Errorf("Validate returned err: %v", err)
+	}
+}
+
+func TestDocker_Repo_BadCompressionLevel(t *testing.T) {
+	// setup types
+	r := &Repo{
+		Cache:            true,
+		CacheName:        "index.docker.io/target/vela-kaniko",
+		Compression:      "zstd",
+		CompressionLevel: 50,
+		Name:             "index.docker.io/target/vela-kaniko",
+		Tags:             []string{"latest"},
+		AutoTag:          true,
+		Label:            &Label{},
+	}
+
+	err := r.Validate()
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}

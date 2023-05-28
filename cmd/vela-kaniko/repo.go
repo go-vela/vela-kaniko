@@ -21,6 +21,10 @@ type (
 		Cache bool
 		// enable caching of image layers for a specific repo
 		CacheName string
+		// type of compression - 'gzip' (default) or 'zstd'
+		Compression string
+		// level of compression - 1 to 19 (inclusive), default is -1
+		CompressionLevel int
 		// used for translating the pre-defined image labels
 		Label *Label
 		// labels of the image for the repository
@@ -152,6 +156,18 @@ func (r *Repo) Validate() error {
 		if err != nil {
 			return fmt.Errorf("topics filter regex not valid")
 		}
+	}
+
+	// make sure a valid compression type was provided, if any
+	if len(r.Compression) > 0 {
+		if r.Compression != "gzip" && r.Compression != "zstd" {
+			return fmt.Errorf("compression has to be one of 'gzip' or 'zstd'")
+		}
+	}
+
+	// make sure compression level is between 1 and 19
+	if r.CompressionLevel > 0 && r.CompressionLevel > 19 {
+		return fmt.Errorf("compression-level can't exceed 19")
 	}
 
 	return nil
