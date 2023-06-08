@@ -60,6 +60,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	if len(p.Build.TarPath) > 0 {
 		flags = append(flags, fmt.Sprintf("--tar-path=%s", p.Build.TarPath))
 	}
+
 	if p.Build.SingleSnapshot {
 		flags = append(flags, "--single-snapshot")
 	}
@@ -83,6 +84,16 @@ func (p *Plugin) Command() *exec.Cmd {
 			// add flag for cache repo from provided repo name
 			flags = append(flags, fmt.Sprintf("--cache-repo=%s", p.Repo.Name))
 		}
+	}
+
+	// check if compression is provided
+	if len(p.Repo.Compression) > 0 {
+		flags = append(flags, fmt.Sprintf("--compression=%s", p.Repo.Compression))
+	}
+
+	// check if compression_level is provided
+	if p.Repo.CompressionLevel != 0 {
+		flags = append(flags, fmt.Sprintf("--compression-level=%d", p.Repo.CompressionLevel))
 	}
 
 	// add flag for context from provided image context
@@ -136,7 +147,7 @@ func (p *Plugin) Command() *exec.Cmd {
 	// check if image custom platform is set
 	if len(p.Image.CustomPlatform) > 0 {
 		// add requested customPlatform flag
-		flags = append(flags, fmt.Sprintf("--customPlatform=%s", p.Image.CustomPlatform))
+		flags = append(flags, fmt.Sprintf("--custom-platform=%s", p.Image.CustomPlatform))
 	}
 
 	// check for insecure registries

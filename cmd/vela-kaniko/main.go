@@ -231,6 +231,18 @@ func main() {
 			Usage:    "enables caching of each layer for a specific repo for the image",
 		},
 		&cli.StringFlag{
+			EnvVars:  []string{"PARAMETER_COMPRESSION", "KANIKO_COMPRESSION"},
+			FilePath: "/vela/parameters/kaniko/compression,/vela/secrets/kaniko/compression",
+			Name:     "repo.compression",
+			Usage:    "set the compression type - gzip (default) or zstd",
+		},
+		&cli.IntFlag{
+			EnvVars:  []string{"PARAMETER_COMPRESSION_LEVEL", "KANIKO_COMPRESSION_LEVEL"},
+			FilePath: "/vela/parameters/kaniko/compression_level,/vela/secrets/kaniko/compression_level",
+			Name:     "repo.compression_level",
+			Usage:    "set the compression level (1-9, inclusive)",
+		},
+		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_REPO", "KANIKO_REPO"},
 			FilePath: "/vela/parameters/kaniko/repo,/vela/secrets/kaniko/repo",
 			Name:     "repo.name",
@@ -358,12 +370,14 @@ func run(c *cli.Context) error {
 		},
 		// repo configuration
 		Repo: &Repo{
-			AutoTag:      c.Bool("repo.auto_tag"),
-			Cache:        c.Bool("repo.cache"),
-			CacheName:    c.String("repo.cache_name"),
-			Name:         c.String("repo.name"),
-			Tags:         c.StringSlice("repo.tags"),
-			TopicsFilter: c.String("repo.topics_filter"),
+			AutoTag:          c.Bool("repo.auto_tag"),
+			Cache:            c.Bool("repo.cache"),
+			CacheName:        c.String("repo.cache_name"),
+			Compression:      c.String("repo.compression"),
+			CompressionLevel: c.Int("repo.compression_level"),
+			Name:             c.String("repo.name"),
+			Tags:             c.StringSlice("repo.tags"),
+			TopicsFilter:     c.String("repo.topics_filter"),
 			Label: &Label{
 				AuthorEmail: c.String("label.author_email"),
 				Commit:      c.String("label.commit"),
