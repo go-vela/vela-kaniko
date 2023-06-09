@@ -171,9 +171,11 @@ steps:
     parameters:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
-      compression: zstd
-      compression_level: 3
++     compression: zstd
++     compression_level: 3
 ```
+
+> **NOTE:** Be aware that while this may yield better compression and/or performance, many common container tools are not yet compatible with this type of compression. Use at your own risk.
 
 ## Secrets
 
