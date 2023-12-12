@@ -76,7 +76,7 @@ func (r *Registry) Write() error {
 	// create full path for config.json file
 	path := "/kaniko/.docker/config.json"
 
-	// nolint: gomnd // ignore magic number
+	//nolint: gomnd // ignore magic number
 	return a.WriteFile(path, []byte(out), 0644)
 }
 
