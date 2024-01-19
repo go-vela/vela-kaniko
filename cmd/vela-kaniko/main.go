@@ -173,13 +173,13 @@ func main() {
 		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_USERNAME", "KANIKO_USERNAME", "DOCKER_USERNAME"},
-			FilePath: "/vela/parameters/kaniko/username,/vela/secrets/kaniko/username",
+			FilePath: "/vela/parameters/kaniko/username,/vela/secrets/kaniko/username,/vela/secrets/managed-auth/username",
 			Name:     "registry.username",
 			Usage:    "user name for communication with the registry",
 		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_PASSWORD", "KANIKO_PASSWORD", "DOCKER_PASSWORD"},
-			FilePath: "/vela/parameters/kaniko/password,/vela/secrets/kaniko/password",
+			FilePath: "/vela/parameters/kaniko/password,/vela/secrets/kaniko/password,/vela/secrets/managed-auth/password",
 			Name:     "registry.password",
 			Usage:    "password for communication with the registry",
 		},
