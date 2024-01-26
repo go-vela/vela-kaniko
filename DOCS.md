@@ -208,9 +208,9 @@ steps:
 The plugin accepts the following files for authentication:
 
 | Parameter  | Volume Configuration                                                |
-| ---------- | ------------------------------------------------------------------- |
-| `password` | `/vela/parameters/kaniko/password`, `/vela/secrets/kaniko/password` |
-| `username` | `/vela/parameters/kaniko/username`, `/vela/secrets/kaniko/username` |
+| ---------- | ---------------------------------------------------------------------------------------------------------- |
+| `password` | `/vela/parameters/kaniko/password`, `/vela/secrets/kaniko/password`, `/vela/secrets/managed-auth/password` |
+| `username` | `/vela/parameters/kaniko/username`, `/vela/secrets/kaniko/username`, `/vela/secrets/managed-auth/username` |
 
 Users can use [Vela external secrets](https://go-vela.github.io/docs/concepts/pipeline/secrets/origin/) to substitute these sensitive values at runtime:
 
