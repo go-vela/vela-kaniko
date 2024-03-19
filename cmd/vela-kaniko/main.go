@@ -108,6 +108,12 @@ func main() {
 			Name:     "build.single_snapshot",
 			Usage:    "takes a single snapshot of the filesystem at the end of the build, so only one layer will be appended to the base image",
 		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_INCLUDE_VAR_RUN", "KANIKO_INCLUDE_VAR_RUN", "VELA_INCLUDE_VAR_RUN"},
+			FilePath: "/vela/parameters/kaniko/include_var_run,/vela/secrets/kaniko/include_var_run",
+			Name:     "build.ignore_var_run",
+			Usage:    "By default Kaniko ignores /var/run when taking image snapshot. Include this parameter to preserve /var/run/* in destination image.",
+		},
 
 		// Image Flags
 
@@ -344,6 +350,7 @@ func run(c *cli.Context) error {
 			UseNewRun:      c.Bool("build.use_new_run"),
 			TarPath:        c.String("build.tar_path"),
 			SingleSnapshot: c.Bool("build.single_snapshot"),
+			IncludeVarRun:  c.Bool("build.include_var_run"),
 		},
 		// image configuration
 		Image: &Image{

@@ -7,9 +7,8 @@ import (
 	"os/exec"
 	"regexp"
 
-	"github.com/spf13/afero"
-
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 var (
@@ -61,6 +60,10 @@ func (p *Plugin) Command() *exec.Cmd {
 
 	if p.Build.SingleSnapshot {
 		flags = append(flags, "--single-snapshot")
+	}
+
+	if p.Build.IncludeVarRun {
+		flags = append(flags, "--ignore-var-run=false")
 	}
 
 	// iterate through all image build args
