@@ -26,7 +26,7 @@ type Build struct {
 	// https://github.com/GoogleContainerTools/kaniko#flag---single-snapshot
 	SingleSnapshot bool
 	// https://github.com/GoogleContainerTools/kaniko#flag---ignore-var-run
-	IncludeVarRun bool
+	IgnoreVarRun bool
 }
 
 // SnapshotModeValues represents the available options for setting a snapshot mode.
