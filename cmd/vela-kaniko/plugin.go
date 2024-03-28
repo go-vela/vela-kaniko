@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
-
-	"github.com/spf13/afero"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 var (
@@ -62,6 +62,8 @@ func (p *Plugin) Command() *exec.Cmd {
 	if p.Build.SingleSnapshot {
 		flags = append(flags, "--single-snapshot")
 	}
+
+	flags = append(flags, fmt.Sprintf("--ignore-var-run=%s", strconv.FormatBool(p.Build.IgnoreVarRun)))
 
 	// iterate through all image build args
 	for _, arg := range p.Image.Args {
