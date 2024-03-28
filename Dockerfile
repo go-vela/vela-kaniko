@@ -12,7 +12,7 @@ RUN apk add --update --no-cache ca-certificates
 ##    docker build --no-cache -t vela-kaniko:local .    ##
 ##########################################################
 
-FROM gcr.io/kaniko-project/executor:v1.20.1-debug@sha256:777f39ec2695fdb8b3cd6c1b0a8f6c3339f2461d660c1f0434e3b41829ad2db8
+FROM gcr.io/kaniko-project/executor:v1.22.0-debug@sha256:7b3699e9e105521075812cd3f3f4c62c913cb5cd113c929975502022df3bcf60
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
