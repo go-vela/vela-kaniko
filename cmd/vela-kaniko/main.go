@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-vela/vela-kaniko/version"
@@ -118,7 +119,7 @@ func main() {
 
 		// Image Flags
 
-		&cli.StringSliceFlag{
+		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_BUILD_ARGS", "KANIKO_BUILD_ARGS"},
 			FilePath: "/vela/parameters/kaniko/build_args,/vela/secrets/kaniko/build_args",
 			Name:     "image.build_args",
@@ -340,6 +341,27 @@ func run(c *cli.Context) error {
 		"registry": "https://hub.docker.com/r/target/vela-kaniko",
 	}).Info("Vela Kaniko Plugin")
 
+	// target type for build args
+	var buildArgs []string
+
+	argsStr := c.String("image.build_args")
+	if len(argsStr) > 0 {
+		buildArgsMap := make(map[string]string)
+
+		// attempt to unmarshal to map
+		err := json.Unmarshal([]byte(argsStr), &buildArgsMap)
+		if err != nil {
+			// fall back on splitting the string
+			buildArgs = strings.Split(argsStr, ",")
+		} else {
+			// iterate through the build args map
+			for key, value := range buildArgsMap {
+				// add the build arg to the build args
+				buildArgs = append(buildArgs, fmt.Sprintf("%s=%s", key, value))
+			}
+		}
+	}
+
 	// create the plugin
 	p := &Plugin{
 		// build configuration
@@ -355,7 +377,7 @@ func run(c *cli.Context) error {
 		},
 		// image configuration
 		Image: &Image{
-			Args:               c.StringSlice("image.build_args"),
+			Args:               buildArgs,
 			Context:            c.String("image.context"),
 			Dockerfile:         c.String("image.dockerfile"),
 			Target:             c.String("image.target"),
