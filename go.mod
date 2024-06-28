@@ -1,10 +1,12 @@
 module github.com/go-vela/vela-kaniko
 
-go 1.21
+go 1.21.9
+
+toolchain go1.22.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/go-vela/types v0.23.3
+	github.com/go-vela/types v0.24.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
