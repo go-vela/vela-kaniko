@@ -116,6 +116,18 @@ func main() {
 			Usage:    "By default Kaniko ignores /var/run when taking image snapshot. Include this parameter to preserve /var/run/* in destination image.",
 			Value:    true,
 		},
+		&cli.StringSliceFlag{
+			EnvVars:  []string{"PARAMETER_IGNORE_PATH", "KANIKO_IGNORE_PATH"},
+			FilePath: "/vela/parameters/kaniko/ignore_path,/vela/secrets/kaniko/ignore_path",
+			Name:     "build.ignore_path",
+			Usage:    "ignore paths when taking image snapshot",
+		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_LOG_TIMESTAMPS", "KANIKO_LOG_TIMESTAMPS"},
+			FilePath: "/vela/parameters/kaniko/log_timestamps,/vela/secrets/kaniko/log_timestamps",
+			Name:     "build.log_timestamps",
+			Usage:    "enable timestamps in logs",
+		},
 
 		// Image Flags
 
@@ -248,6 +260,13 @@ func main() {
 			Name:     "repo.compression_level",
 			Usage:    "set the compression level (1-9, inclusive)",
 		},
+		&cli.BoolFlag{
+			EnvVars:  []string{"PARAMETER_COMPRESSED_CACHING", "KANIKO_COMPRESSED_CACHING"},
+			FilePath: "/vela/parameters/kaniko/compressed_caching,/vela/secrets/kaniko/compressed_caching",
+			Name:     "repo.compressed_caching",
+			Usage:    "when set to false, will prevent tar compression for cached layers",
+			Value:    true,
+		},
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_REPO", "KANIKO_REPO"},
 			FilePath: "/vela/parameters/kaniko/repo,/vela/secrets/kaniko/repo",
@@ -374,6 +393,8 @@ func run(c *cli.Context) error {
 			TarPath:        c.String("build.tar_path"),
 			SingleSnapshot: c.Bool("build.single_snapshot"),
 			IgnoreVarRun:   c.Bool("build.ignore_var_run"),
+			IgnorePath:     c.StringSlice("build.ignore_path"),
+			LogTimestamp:   c.Bool("build.log_timestamps"),
 		},
 		// image configuration
 		Image: &Image{
@@ -398,14 +419,15 @@ func run(c *cli.Context) error {
 		},
 		// repo configuration
 		Repo: &Repo{
-			AutoTag:          c.Bool("repo.auto_tag"),
-			Cache:            c.Bool("repo.cache"),
-			CacheName:        c.String("repo.cache_name"),
-			Compression:      c.String("repo.compression"),
-			CompressionLevel: c.Int("repo.compression_level"),
-			Name:             c.String("repo.name"),
-			Tags:             c.StringSlice("repo.tags"),
-			TopicsFilter:     c.String("repo.topics_filter"),
+			AutoTag:           c.Bool("repo.auto_tag"),
+			Cache:             c.Bool("repo.cache"),
+			CacheName:         c.String("repo.cache_name"),
+			Compression:       c.String("repo.compression"),
+			CompressionLevel:  c.Int("repo.compression_level"),
+			CompressedCaching: c.Bool("repo.compressed_caching"),
+			Name:              c.String("repo.name"),
+			Tags:              c.StringSlice("repo.tags"),
+			TopicsFilter:      c.String("repo.topics_filter"),
 			Label: &Label{
 				AuthorEmail: c.String("label.author_email"),
 				Commit:      c.String("label.commit"),

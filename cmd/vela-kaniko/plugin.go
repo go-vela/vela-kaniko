@@ -65,6 +65,18 @@ func (p *Plugin) Command() *exec.Cmd {
 
 	flags = append(flags, fmt.Sprintf("--ignore-var-run=%s", strconv.FormatBool(p.Build.IgnoreVarRun)))
 
+	// add paths to be ignored if provided
+	if len(p.Build.IgnorePath) > 0 {
+		for _, path := range p.Build.IgnorePath {
+			flags = append(flags, fmt.Sprintf("--ignore-path=%s", path))
+		}
+	}
+
+	// add timestamps if enabled
+	if p.Build.LogTimestamp {
+		flags = append(flags, "--log-timestamp")
+	}
+
 	// iterate through all image build args
 	for _, arg := range p.Image.Args {
 		// add flag for build args from provided image build arg
@@ -94,6 +106,11 @@ func (p *Plugin) Command() *exec.Cmd {
 	// check if compression_level is provided
 	if p.Repo.CompressionLevel != 0 {
 		flags = append(flags, fmt.Sprintf("--compression-level=%d", p.Repo.CompressionLevel))
+	}
+
+	// check if compressed caching is disabled
+	if !p.Repo.CompressedCaching {
+		flags = append(flags, "--compressed-caching=false")
 	}
 
 	// add flag for context from provided image context

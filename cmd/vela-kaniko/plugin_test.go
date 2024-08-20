@@ -95,6 +95,8 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			Sha:          "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
 			Tag:          "v0.0.0",
 			IgnoreVarRun: true,
+			IgnorePath:   []string{"/tmp", ".git"},
+			LogTimestamp: true,
 		},
 		Image: &Image{
 			Args:       []string{"foo=bar"},
@@ -113,18 +115,22 @@ func TestDocker_Plugin_Command(t *testing.T) {
 			InsecurePush:       true,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
 	want := exec.Command(
 		kanikoBin,
 		"--ignore-var-run=true",
+		"--ignore-path=/tmp",
+		"--ignore-path=.git",
+		"--log-timestamp",
 		"--build-arg=foo=bar",
 		"--cache",
 		"--cache-repo=index.docker.io/target/vela-kaniko",
@@ -184,12 +190,13 @@ func TestDocker_Plugin_Command_AutoTag_TagBuild(t *testing.T) {
 			InsecurePush:       true,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -259,12 +266,13 @@ func TestDocker_Plugin_Command_AutoTag_PushBuild(t *testing.T) {
 			InsecurePush:       true,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -330,13 +338,14 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
-			Labels:    []string{"key1=tag1"},
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			Labels:            []string{"key1=tag1"},
+			CompressedCaching: true,
 		},
 	}
 
@@ -397,12 +406,13 @@ func TestDocker_Plugin_Command_With_MultipleTopics(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     label,
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             label,
+			CompressedCaching: true,
 		},
 	}
 
@@ -462,13 +472,14 @@ func TestDocker_Plugin_Command_With_MultipleTopicsWithFilter(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:        true,
-			CacheName:    "index.docker.io/target/vela-kaniko",
-			Name:         "index.docker.io/target/vela-kaniko",
-			Tags:         []string{"latest"},
-			AutoTag:      true,
-			TopicsFilter: "^id",
-			Label:        label,
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			TopicsFilter:      "^id",
+			Label:             label,
+			CompressedCaching: true,
 		},
 	}
 
@@ -528,12 +539,13 @@ func TestDocker_Plugin_Command_With_MultipleTopicsNoTopics(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     label,
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             label,
+			CompressedCaching: true,
 		},
 	}
 
@@ -591,12 +603,13 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -657,12 +670,13 @@ func TestDocker_Plugin_Command_With_UseNewRun(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -723,12 +737,13 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -789,12 +804,13 @@ func TestDocker_Plugin_Command_With_UseSingleSnapshot(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -854,12 +870,13 @@ func TestDocker_Plugin_Command_With_UseIgnoreVarRunFalse(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -918,12 +935,13 @@ func TestDocker_Plugin_Command_With_UseIgnoreVarRunTrue(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -983,12 +1001,13 @@ func TestDocker_Plugin_Command_With_ForceBuildMetaData(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -1049,12 +1068,13 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -1114,14 +1134,15 @@ func TestDocker_Plugin_Command_With_Compression(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:            true,
-			CacheName:        "index.docker.io/target/vela-kaniko",
-			Compression:      "zstd",
-			CompressionLevel: 3,
-			Name:             "index.docker.io/target/vela-kaniko",
-			Tags:             []string{"latest"},
-			AutoTag:          true,
-			Label:            testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Compression:       "zstd",
+			CompressionLevel:  3,
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -1182,11 +1203,12 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:   true,
-			Name:    "index.docker.io/target/vela-kaniko",
-			Tags:    []string{"latest"},
-			AutoTag: true,
-			Label:   testLabel(),
+			Cache:             true,
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -1244,12 +1266,13 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 			PushRetry: 1,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -1310,12 +1333,13 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 			InsecurePush:       true,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     testLabel(),
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             testLabel(),
+			CompressedCaching: true,
 		},
 	}
 
@@ -1378,12 +1402,13 @@ func TestDocker_Plugin_Validate(t *testing.T) {
 			DryRun:   false,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     &Label{},
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             &Label{},
+			CompressedCaching: true,
 		},
 	}
 
@@ -1410,11 +1435,12 @@ func TestDocker_Plugin_Validate_NoBuild(t *testing.T) {
 			DryRun:   false,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			CompressedCaching: true,
 		},
 	}
 
@@ -1447,12 +1473,13 @@ func TestDocker_Plugin_Validate_AutoTag_InvalidBuildTag(t *testing.T) {
 			DryRun:   false,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
-			Label:     &Label{},
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			Label:             &Label{},
+			CompressedCaching: true,
 		},
 	}
 
@@ -1482,11 +1509,12 @@ func TestDocker_Plugin_Validate_NoImage(t *testing.T) {
 			DryRun:   false,
 		},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			CompressedCaching: true,
 		},
 	}
 
@@ -1513,11 +1541,12 @@ func TestDocker_Plugin_Validate_NoRegistry(t *testing.T) {
 		},
 		Registry: &Registry{},
 		Repo: &Repo{
-			Cache:     true,
-			CacheName: "index.docker.io/target/vela-kaniko",
-			Name:      "index.docker.io/target/vela-kaniko",
-			Tags:      []string{"latest"},
-			AutoTag:   true,
+			Cache:             true,
+			CacheName:         "index.docker.io/target/vela-kaniko",
+			Name:              "index.docker.io/target/vela-kaniko",
+			Tags:              []string{"latest"},
+			AutoTag:           true,
+			CompressedCaching: true,
 		},
 	}
 
