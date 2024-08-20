@@ -23,6 +23,8 @@ type (
 		Compression string
 		// level of compression - 1 to 9 (inclusive)
 		CompressionLevel int
+		// prevent tar compression for cached layers
+		CompressedCaching bool
 		// used for translating the pre-defined image labels
 		Label *Label
 		// labels of the image for the repository
