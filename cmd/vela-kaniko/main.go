@@ -319,6 +319,21 @@ func main() {
 			Name:    "label.url",
 			Usage:   "direct url of the repository",
 		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_LINK"},
+			Name:    "label.build_link",
+			Usage:   "direct Vela link to the build",
+		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_HOST"},
+			Name:    "label.host",
+			Usage:   "host that the image is built on",
+		},
+		&cli.StringSliceFlag{
+			EnvVars: []string{"VELA_BUILD_CUSTOM_LABELS"},
+			Name:    "label.custom",
+			Usage:   "custom labels to add to the image in the form LABEL_NAME=ENV_KEY",
+		},
 		&cli.StringSliceFlag{
 			EnvVars: []string{"VELA_REPO_TOPICS"},
 			Name:    "label.topics",
@@ -436,6 +451,9 @@ func run(c *cli.Context) error {
 				Number:      c.Int("label.number"),
 				Topics:      c.StringSlice("label.topics"),
 				URL:         c.String("label.url"),
+				BuildURL:    c.String("label.build_link"),
+				Host:        c.String("label.host"),
+				CustomSet:   c.StringSlice("label.custom"),
 			},
 			Labels: c.StringSlice("repo.labels"),
 		},

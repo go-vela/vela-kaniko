@@ -54,6 +54,12 @@ type (
 		Topics []string
 		// direct url of the repository
 		URL string
+		// direct url of the build
+		BuildURL string
+		// host that the image is built on
+		Host string
+		// custom set of labels that the user can provide
+		CustomSet []string
 	}
 )
 
@@ -61,21 +67,6 @@ type (
 func (r *Repo) AddLabels() []string {
 	// store all the topics
 	topics := r.Label.Topics
-	// labels we will return
-	labels := []string{}
-
-	// append the standard set of labels
-	labels = append(
-		labels,
-		fmt.Sprintf("org.opencontainers.image.created=%s", r.Label.Created),
-		fmt.Sprintf("org.opencontainers.image.url=%s", r.Label.URL),
-		fmt.Sprintf("org.opencontainers.image.revision=%s", r.Label.Commit),
-		fmt.Sprintf("io.vela.build.author=%s", r.Label.AuthorEmail),
-		fmt.Sprintf("io.vela.build.number=%d", r.Label.Number),
-		fmt.Sprintf("io.vela.build.repo=%s", r.Label.FullName),
-		fmt.Sprintf("io.vela.build.commit=%s", r.Label.Commit),
-		fmt.Sprintf("io.vela.build.url=%s", r.Label.URL),
-	)
 
 	// if a filter is defined, use it to only
 	// include those that match the filter
@@ -92,11 +83,41 @@ func (r *Repo) AddLabels() []string {
 		}
 	}
 
-	// only append topics if we have any, since the possibility of
-	// it being empty is much higher than any of the other fields
-	// that are derived from standard Vela build variables
+	labelMap := map[string]string{
+		"org.opencontainers.image.created":  r.Label.Created,
+		"org.opencontainers.image.url":      r.Label.URL,
+		"org.opencontainers.image.revision": r.Label.Commit,
+		"io.vela.build.author":              r.Label.AuthorEmail,
+		"io.vela.build.number":              fmt.Sprintf("%d", r.Label.Number),
+		"io.vela.build.repo":                r.Label.FullName,
+		"io.vela.build.commit":              r.Label.Commit,
+		"io.vela.build.url":                 r.Label.URL,
+		"io.vela.build.link":                r.Label.BuildURL,
+		"io.vela.build.host":                r.Label.Host,
+	}
+
 	if len(topics) > 0 {
-		labels = append(labels, fmt.Sprintf("io.vela.build.topics=%s", strings.Join(topics, ",")))
+		labelMap["io.vela.build.topics"] = strings.Join(topics, ",")
+	}
+
+	// labels we will return
+	labels := []string{}
+
+	// append the standard set of labels
+	for k, v := range labelMap {
+		labels = append(labels, fmt.Sprintf("%s=%s", k, v))
+	}
+
+	// append the custom set of labels
+	for _, label := range r.Label.CustomSet {
+		parsed := strings.Split(label, "=")
+
+		// do not let user overwrite predefined labels
+		if _, exists := labelMap[parsed[0]]; exists {
+			logrus.Fatalf("custom label %s already exists in predefined labels", parsed[0])
+		}
+
+		labels = append(labels, label)
 	}
 
 	return labels
@@ -169,6 +190,16 @@ func (r *Repo) Validate() error {
 	if r.CompressionLevel != 0 {
 		if r.CompressionLevel < 1 || r.CompressionLevel > 9 {
 			return fmt.Errorf("compression-level must be between 1 - 9 inclusive")
+		}
+	}
+
+	if len(r.Label.CustomSet) > 0 {
+		for _, label := range r.Label.CustomSet {
+			split := strings.Split(label, "=")
+
+			if len(split) != 2 {
+				return fmt.Errorf("custom label %s is not in the format key=value", label)
+			}
 		}
 	}
 
