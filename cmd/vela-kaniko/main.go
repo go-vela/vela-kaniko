@@ -319,6 +319,21 @@ func main() {
 			Name:    "label.url",
 			Usage:   "direct url of the repository",
 		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_LINK"},
+			Name:    "label.build_link",
+			Usage:   "direct Vela link to the build",
+		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_HOST"},
+			Name:    "label.host",
+			Usage:   "host that the image is built on",
+		},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_CUSTOM_LABELS", "PARAMETER_CUSTOM_LABELS"},
+			Name:    "label.custom",
+			Usage:   "custom labels to add to the image in the form LABEL_NAME=ENV_KEY",
+		},
 		&cli.StringSliceFlag{
 			EnvVars: []string{"VELA_REPO_TOPICS"},
 			Name:    "label.topics",
@@ -381,6 +396,27 @@ func run(c *cli.Context) error {
 		}
 	}
 
+	// target type for custom labels
+	var customLabels []string
+
+	labelsStr := c.String("label.custom")
+	if len(labelsStr) > 0 {
+		customLabelsMap := make(map[string]string)
+
+		// attempt to unmarshal to map
+		err := json.Unmarshal([]byte(labelsStr), &customLabelsMap)
+		if err != nil {
+			// fall back on splitting the string
+			customLabels = strings.Split(labelsStr, ",")
+		} else {
+			// iterate through the custom labels map
+			for key, value := range customLabelsMap {
+				// add the custom label to the custom labels
+				customLabels = append(customLabels, fmt.Sprintf("%s=%s", key, value))
+			}
+		}
+	}
+
 	// create the plugin
 	p := &Plugin{
 		// build configuration
@@ -436,6 +472,9 @@ func run(c *cli.Context) error {
 				Number:      c.Int("label.number"),
 				Topics:      c.StringSlice("label.topics"),
 				URL:         c.String("label.url"),
+				BuildURL:    c.String("label.build_link"),
+				Host:        c.String("label.host"),
+				CustomSet:   customLabels,
 			},
 			Labels: c.StringSlice("repo.labels"),
 		},

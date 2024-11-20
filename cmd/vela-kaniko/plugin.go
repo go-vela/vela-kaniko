@@ -122,15 +122,6 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--destination=%s:%s", p.Repo.Name, tag))
 	}
 
-	// add predefined labels to user provided labels
-	p.Repo.Labels = append(p.Repo.Labels, p.Repo.AddLabels()...)
-
-	// iterate through all repo labels
-	for _, label := range p.Repo.Labels {
-		// add flag for tag from provided repo tag
-		flags = append(flags, "--label", label)
-	}
-
 	// add flag for dockerfile from provided image dockerfile
 	flags = append(flags, fmt.Sprintf("--dockerfile=%s", p.Image.Dockerfile))
 
@@ -187,6 +178,15 @@ func (p *Plugin) Command() *exec.Cmd {
 
 	// add flag for logging verbosity
 	flags = append(flags, fmt.Sprintf("--verbosity=%s", logrus.GetLevel()))
+
+	// add predefined labels to user provided labels
+	p.Repo.Labels = append(p.Repo.Labels, p.Repo.AddLabels()...)
+
+	// iterate through all repo labels
+	for _, label := range p.Repo.Labels {
+		// add flag for tag from provided repo tag
+		flags = append(flags, fmt.Sprintf("--label=%s", label))
+	}
 
 	return exec.Command(kanikoBin, flags...)
 }
