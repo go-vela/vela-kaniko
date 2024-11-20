@@ -329,8 +329,8 @@ func main() {
 			Name:    "label.host",
 			Usage:   "host that the image is built on",
 		},
-		&cli.StringSliceFlag{
-			EnvVars: []string{"VELA_BUILD_CUSTOM_LABELS"},
+		&cli.StringFlag{
+			EnvVars: []string{"VELA_BUILD_CUSTOM_LABELS", "PARAMETER_CUSTOM_LABELS"},
 			Name:    "label.custom",
 			Usage:   "custom labels to add to the image in the form LABEL_NAME=ENV_KEY",
 		},
@@ -392,6 +392,27 @@ func run(c *cli.Context) error {
 			for key, value := range buildArgsMap {
 				// add the build arg to the build args
 				buildArgs = append(buildArgs, fmt.Sprintf("%s=%s", key, value))
+			}
+		}
+	}
+
+	// target type for custom labels
+	var customLabels []string
+
+	labelsStr := c.String("label.custom")
+	if len(labelsStr) > 0 {
+		customLabelsMap := make(map[string]string)
+
+		// attempt to unmarshal to map
+		err := json.Unmarshal([]byte(labelsStr), &customLabelsMap)
+		if err != nil {
+			// fall back on splitting the string
+			customLabels = strings.Split(labelsStr, ",")
+		} else {
+			// iterate through the custom labels map
+			for key, value := range customLabelsMap {
+				// add the custom label to the custom labels
+				customLabels = append(customLabels, fmt.Sprintf("%s=%s", key, value))
 			}
 		}
 	}
