@@ -474,7 +474,7 @@ func run(c *cli.Context) error {
 				URL:         c.String("label.url"),
 				BuildURL:    c.String("label.build_link"),
 				Host:        c.String("label.host"),
-				CustomSet:   c.StringSlice("label.custom"),
+				CustomSet:   customLabels,
 			},
 			Labels: c.StringSlice("repo.labels"),
 		},
