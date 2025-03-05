@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/go-vela/server/version"
-
 	"github.com/Masterminds/semver/v3"
-
 	"github.com/sirupsen/logrus"
+
+	"github.com/go-vela/server/version"
 )
 
 var (
