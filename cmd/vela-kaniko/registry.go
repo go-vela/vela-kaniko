@@ -6,9 +6,8 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/spf13/afero"
-
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 const (

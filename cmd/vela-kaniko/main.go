@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-vela/vela-kaniko/version"
-
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 
 	_ "github.com/joho/godotenv/autoload"
+
+	"github.com/go-vela/vela-kaniko/version"
 )
 
 //nolint:funlen // ignore function length due to comments and flags
