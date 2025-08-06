@@ -9,7 +9,7 @@ import (
 
 func TestDocker_execCmd(t *testing.T) {
 	// setup types
-	e := exec.Command("echo", "hello")
+	e := exec.CommandContext(t.Context(), "echo", "hello")
 
 	err := execCmd(e)
 	if err != nil {

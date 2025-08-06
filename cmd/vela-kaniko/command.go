@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -31,7 +32,7 @@ func execCmd(e *exec.Cmd) error {
 
 // versionCmd is a helper function to output
 // the client version information.
-func versionCmd() *exec.Cmd {
+func versionCmd(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating kaniko version command")
 
 	// variable to store flags for command
@@ -40,5 +41,5 @@ func versionCmd() *exec.Cmd {
 	// add flag for version kaniko command
 	flags = append(flags, "version")
 
-	return exec.Command(kanikoBin, flags...)
+	return exec.CommandContext(ctx, kanikoBin, flags...)
 }

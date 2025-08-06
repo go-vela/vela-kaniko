@@ -42,7 +42,7 @@ func TestDocker_Plugin_Exec_BadWrite(t *testing.T) {
 		},
 	}
 
-	err := p.Exec()
+	err := p.Exec(t.Context())
 	if err == nil {
 		t.Errorf("Exec should have returned err")
 	}
@@ -82,7 +82,7 @@ func TestDocker_Plugin_Exec_BadExec(t *testing.T) {
 		},
 	}
 
-	err := p.Exec()
+	err := p.Exec(t.Context())
 	if err == nil {
 		t.Errorf("Exec should have returned err")
 	}
@@ -126,7 +126,8 @@ func TestDocker_Plugin_Command(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--ignore-path=/tmp",
@@ -160,7 +161,7 @@ func TestDocker_Plugin_Command(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -206,7 +207,8 @@ func TestDocker_Plugin_Command_AutoTag_TagBuild(t *testing.T) {
 	// configure repo tags using auto_tag and build info
 	p.Repo.ConfigureAutoTagBuildTags(p.Build)
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -238,7 +240,7 @@ func TestDocker_Plugin_Command_AutoTag_TagBuild(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -284,7 +286,8 @@ func TestDocker_Plugin_Command_AutoTag_PushBuild(t *testing.T) {
 	// configure repo tags using auto_tag and build info
 	p.Repo.ConfigureAutoTagBuildTags(p.Build)
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -316,7 +319,7 @@ func TestDocker_Plugin_Command_AutoTag_PushBuild(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -356,7 +359,8 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -383,7 +387,7 @@ func TestDocker_Plugin_Command_With_Labels(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -425,7 +429,8 @@ func TestDocker_Plugin_Command_With_MultipleTopics(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -451,7 +456,7 @@ func TestDocker_Plugin_Command_With_MultipleTopics(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -494,7 +499,8 @@ func TestDocker_Plugin_Command_With_MultipleTopicsWithFilter(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -520,7 +526,7 @@ func TestDocker_Plugin_Command_With_MultipleTopicsWithFilter(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -562,7 +568,8 @@ func TestDocker_Plugin_Command_With_MultipleTopicsNoTopics(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -587,7 +594,7 @@ func TestDocker_Plugin_Command_With_MultipleTopicsNoTopics(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -634,7 +641,8 @@ func TestDocker_Plugin_Command_With_CustomLabels(t *testing.T) {
 
 	p.Repo.Label.CustomSet = []string{"label1=foo", "label2=bar"}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--ignore-path=/tmp",
@@ -670,7 +678,7 @@ func TestDocker_Plugin_Command_With_CustomLabels(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -711,7 +719,8 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--snapshot-mode=redo",
 		"--ignore-var-run=true",
@@ -739,7 +748,7 @@ func TestDocker_Plugin_Command_With_SnapshotMode(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -780,7 +789,8 @@ func TestDocker_Plugin_Command_With_UseNewRun(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--use-new-run",
 		"--ignore-var-run=true",
@@ -808,7 +818,7 @@ func TestDocker_Plugin_Command_With_UseNewRun(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -849,7 +859,8 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--tar-path=build",
 		"--ignore-var-run=true",
@@ -877,7 +888,7 @@ func TestDocker_Plugin_Command_With_TarPath(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -918,7 +929,8 @@ func TestDocker_Plugin_Command_With_UseSingleSnapshot(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--single-snapshot",
 		"--ignore-var-run=true",
@@ -946,7 +958,7 @@ func TestDocker_Plugin_Command_With_UseSingleSnapshot(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -986,7 +998,8 @@ func TestDocker_Plugin_Command_With_UseIgnoreVarRunFalse(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=false",
 		"--build-arg=foo=bar",
@@ -1013,7 +1026,7 @@ func TestDocker_Plugin_Command_With_UseIgnoreVarRunFalse(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1053,7 +1066,8 @@ func TestDocker_Plugin_Command_With_UseIgnoreVarRunTrue(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1080,7 +1094,7 @@ func TestDocker_Plugin_Command_With_UseIgnoreVarRunTrue(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1121,7 +1135,8 @@ func TestDocker_Plugin_Command_With_ForceBuildMetaData(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1149,7 +1164,7 @@ func TestDocker_Plugin_Command_With_ForceBuildMetaData(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1190,7 +1205,8 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1218,7 +1234,7 @@ func TestDocker_Plugin_Command_With_Mirror(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1260,7 +1276,8 @@ func TestDocker_Plugin_Command_With_Compression(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1289,7 +1306,7 @@ func TestDocker_Plugin_Command_With_Compression(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1328,7 +1345,8 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1354,7 +1372,7 @@ func TestDocker_Plugin_Command_NoCacheRepo(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1394,7 +1412,8 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1419,7 +1438,7 @@ func TestDocker_Plugin_Command_NoDryRun(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
@@ -1463,7 +1482,8 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 		},
 	}
 
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		kanikoBin,
 		"--ignore-var-run=true",
 		"--build-arg=foo=bar",
@@ -1495,7 +1515,7 @@ func TestDocker_Plugin_Command_CustomPlatform(t *testing.T) {
 	)
 
 	// run test
-	got := p.Command()
+	got := p.Command(t.Context())
 
 	if !strings.EqualFold(sortCmdArgs(got).String(), sortCmdArgs(want).String()) {
 		t.Errorf("Command is %v, want %v", got, want)
