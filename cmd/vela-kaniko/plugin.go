@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"regexp"
@@ -40,7 +41,7 @@ type Plugin struct {
 
 // Command formats and outputs the command necessary for
 // Kaniko to build and publish a Docker image.
-func (p *Plugin) Command() *exec.Cmd {
+func (p *Plugin) Command(ctx context.Context) *exec.Cmd {
 	logrus.Debug("creating kaniko command from plugin configuration")
 
 	// variable to store flags for command
@@ -188,11 +189,11 @@ func (p *Plugin) Command() *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("--label=%s", label))
 	}
 
-	return exec.Command(kanikoBin, flags...)
+	return exec.CommandContext(ctx, kanikoBin, flags...)
 }
 
 // Exec formats and runs the commands for building and publishing a Docker image.
-func (p *Plugin) Exec() error {
+func (p *Plugin) Exec(ctx context.Context) error {
 	logrus.Debug("running plugin with provided configuration")
 
 	// create registry file for authentication
@@ -202,13 +203,13 @@ func (p *Plugin) Exec() error {
 	}
 
 	// output the kaniko version for troubleshooting
-	err = execCmd(versionCmd())
+	err = execCmd(versionCmd(ctx))
 	if err != nil {
 		return err
 	}
 
 	// run kaniko command from plugin configuration
-	err = execCmd(p.Command())
+	err = execCmd(p.Command(ctx))
 	if err != nil {
 		return err
 	}
