@@ -212,7 +212,7 @@ bump-deps-full: check
 docker-build:
 	@echo
 	@echo "### Building vela-kaniko:local image"
-	@docker build --no-cache -t vela-kaniko:local .
+	@docker build --no-cache --build-arg KANIKO_IMAGE=target/kaniko/executor:debug-v1.24.0 -t vela-kaniko:local .
 
 # The `docker-test` target is intended to execute
 # the Docker image for the plugin with test variables.

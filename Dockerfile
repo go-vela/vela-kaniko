@@ -12,7 +12,11 @@ RUN apk add --update --no-cache ca-certificates
 ##    docker build --no-cache -t vela-kaniko:local .    ##
 ##########################################################
 
-FROM gcr.io/kaniko-project/executor:v1.24.0-debug@sha256:2562c4fe551399514277ffff7dcca9a3b1628c4ea38cb017d7286dc6ea52f4cd
+# Allow the kaniko base image to be overridden via build arg
+# renovate: datasource=github-releases depName=chainguard-dev/kaniko
+ARG KANIKO_IMAGE=target/kaniko/executor:debug-v1.24.0
+
+FROM ${KANIKO_IMAGE}
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
