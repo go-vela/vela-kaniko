@@ -3,10 +3,11 @@
   "extends": [
     "local>go-vela/renovate-config"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": [
-        "^\\.github/workflows/prerelease\\.yml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/prerelease\\.yml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=github-releases depName=chainguard-dev/kaniko\\s+echo \"KANIKO_VERSION=(?<currentValue>v[0-9.]+)\" >> \\$GITHUB_ENV"
@@ -16,8 +17,9 @@
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
-      "fileMatch": [
-        "^Dockerfile$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
       ],
       "matchStrings": [
         "# renovate: datasource=github-releases depName=chainguard-dev/kaniko\\s+ARG KANIKO_IMAGE=target/kaniko/executor:debug-(?<currentValue>v[0-9.]+)"
@@ -29,8 +31,12 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": ["github-releases"],
-      "matchDepNames": ["chainguard-dev/kaniko"],
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchDepNames": [
+        "chainguard-dev/kaniko"
+      ],
       "groupName": "chainguard-dev/kaniko"
     }
   ]
