@@ -29,13 +29,13 @@ jobs:
     - name: setup
       run: |
         # define the kaniko version to use
-        # renovate: datasource=github-releases depName=chainguard-dev/kaniko
+        # renovate: datasource=github-releases depName=chainguard-forks/kaniko
         echo "KANIKO_VERSION=v1.24.0" >> $GITHUB_ENV
 
     - name: check if kaniko base image exists
       id: check-kaniko
       run: |
-        KANIKO_IMAGE="target/kaniko/executor:debug-${KANIKO_VERSION}"
+        KANIKO_IMAGE="target/kaniko-executor:debug-${KANIKO_VERSION}"
         echo "Checking for image: ${KANIKO_IMAGE}"
         
         if docker manifest inspect ${KANIKO_IMAGE} > /dev/null 2>&1; then
@@ -52,7 +52,7 @@ jobs:
       if: steps.check-kaniko.outputs.exists == 'false'
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
-        repository: chainguard-dev/kaniko
+        repository: chainguard-forks/kaniko
         ref: ${{ env.KANIKO_VERSION }}
         path: kaniko-repo
 
@@ -69,8 +69,8 @@ jobs:
       run: |
         REGISTRY=target/kaniko make images
         
-        docker tag target/kaniko/executor:debug target/kaniko/executor:debug-${KANIKO_VERSION}
-        docker push target/kaniko/executor:debug-${KANIKO_VERSION}
+        docker tag target/kaniko/executor:debug target/kaniko-executor:debug-${KANIKO_VERSION}
+        docker push target/kaniko-executor:debug-${KANIKO_VERSION}
 
     - name: return to vela-kaniko checkout
       if: steps.check-kaniko.outputs.exists == 'false'
