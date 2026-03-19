@@ -9,10 +9,10 @@
         "^\\.github/workflows/prerelease\\.yml$"
       ],
       "matchStrings": [
-        "# renovate: datasource=github-releases depName=chainguard-dev/kaniko\\s+echo \"KANIKO_VERSION=(?<currentValue>v[0-9.]+)\" >> \\$GITHUB_ENV"
+        "# renovate: datasource=github-releases depName=chainguard-forks/kaniko\\s+echo \"KANIKO_VERSION=(?<currentValue>v[0-9.]+)\" >> \\$GITHUB_ENV"
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "chainguard-dev/kaniko",
+      "depNameTemplate": "chainguard-forks/kaniko",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
@@ -20,18 +20,18 @@
         "^Dockerfile$"
       ],
       "matchStrings": [
-        "# renovate: datasource=github-releases depName=chainguard-dev/kaniko\\s+ARG KANIKO_IMAGE=target/kaniko/executor:debug-(?<currentValue>v[0-9.]+)"
+        "# renovate: datasource=github-releases depName=chainguard-forks/kaniko\\s+ARG KANIKO_IMAGE=target/kaniko-executor:debug-(?<currentValue>v[0-9.]+)"
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "chainguard-dev/kaniko",
+      "depNameTemplate": "chainguard-forks/kaniko",
       "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ],
   "packageRules": [
     {
       "matchDatasources": ["github-releases"],
-      "matchDepNames": ["chainguard-dev/kaniko"],
-      "groupName": "chainguard-dev/kaniko"
+      "matchDepNames": ["chainguard-forks/kaniko"],
+      "groupName": "chainguard-forks/kaniko"
     }
   ]
 }

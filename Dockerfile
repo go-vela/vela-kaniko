@@ -13,8 +13,8 @@ RUN apk add --update --no-cache ca-certificates
 ##########################################################
 
 # Allow the kaniko base image to be overridden via build arg
-# renovate: datasource=github-releases depName=chainguard-dev/kaniko
-ARG KANIKO_IMAGE=target/kaniko/executor:debug-v1.24.0
+# renovate: datasource=github-releases depName=chainguard-forks/kaniko
+ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.24.0
 
 FROM ${KANIKO_IMAGE}
 
