@@ -4,17 +4,18 @@
 ##    docker build --no-cache --target certs -t vela-kaniko:certs .    ##
 #########################################################################
 
-FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 as certs
+# Allow the kaniko base image to be overridden via build arg.
+# It must be declared before any FROM to be usable in FROM.
+# renovate: datasource=github-releases depName=chainguard-forks/kaniko
+ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.24.0
+
+FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS certs
 
 RUN apk add --update --no-cache ca-certificates
 
 ##########################################################
 ##    docker build --no-cache -t vela-kaniko:local .    ##
 ##########################################################
-
-# Allow the kaniko base image to be overridden via build arg
-# renovate: datasource=github-releases depName=chainguard-forks/kaniko
-ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.24.0
 
 FROM ${KANIKO_IMAGE}
 
