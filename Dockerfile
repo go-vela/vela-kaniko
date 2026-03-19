@@ -4,8 +4,6 @@
 ##    docker build --no-cache --target certs -t vela-kaniko:certs .    ##
 #########################################################################
 
-# Allow the kaniko base image to be overridden via build arg.
-# It must be declared before any FROM to be usable in FROM.
 # renovate: datasource=github-releases depName=chainguard-forks/kaniko
 ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.24.0
 
