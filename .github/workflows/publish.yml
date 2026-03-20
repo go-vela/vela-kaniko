@@ -46,7 +46,7 @@ jobs:
           echo "exists=false" >> $GITHUB_OUTPUT
         fi
         
-        echo "kaniko_image=${KANIKO_IMAGE}" >> $GITHUB_OUTPUT
+        echo "KANIKO_IMAGE=${KANIKO_IMAGE}" >> $GITHUB_ENV
 
     - name: checkout kaniko repository
       if: steps.check-kaniko.outputs.exists == 'false'
@@ -91,4 +91,4 @@ jobs:
         cache: true
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        buildargs: KANIKO_IMAGE=${{ steps.check-kaniko.outputs.kaniko_image }}
+        buildargs: KANIKO_IMAGE
