@@ -1,5 +1,25 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchDepNames": [
+        "target/kaniko-executor"
+      ],
+      "versioning": "regex:^debug-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchDepNames": [
+        "chainguard-forks/kaniko"
+      ],
+      "groupName": "upstream-kaniko"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
@@ -17,37 +37,14 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^Dockerfile$/"
-      ],
-      "matchStrings": [
-        "ARG KANIKO_IMAGE=target/kaniko-executor:debug-(?<currentValue>v[0-9.]+)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "chainguard-forks/kaniko",
-      "extractVersionTemplate": "^(?<version>.+)$"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
         "/^Makefile$/"
       ],
       "matchStrings": [
         "--build-arg KANIKO_IMAGE=target/kaniko-executor:debug-(?<currentValue>v[0-9.]+)"
       ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "chainguard-forks/kaniko",
-      "extractVersionTemplate": "^(?<version>.+)$"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchDatasources": [
-        "github-releases"
-      ],
-      "matchDepNames": [
-        "chainguard-forks/kaniko"
-      ],
-      "groupName": "upstream-kaniko"
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "target/kaniko-executor",
+      "versioningTemplate": "regex:^debug-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ]
 }
