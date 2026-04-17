@@ -10,6 +10,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      KANIKO_VERSION: v1.24.0
 
     steps:
     - name: clone
@@ -25,12 +27,6 @@ jobs:
         go-version-file: 'go.mod'
         cache: true
         check-latest: true
-
-    - name: setup
-      run: |
-        # define the kaniko version to use
-        # renovate: datasource=github-releases depName=chainguard-forks/kaniko
-        echo "KANIKO_VERSION=v1.24.0" >> $GITHUB_ENV
 
     - name: check if kaniko base image exists
       id: check-kaniko
