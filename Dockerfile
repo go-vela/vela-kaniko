@@ -6,7 +6,7 @@
 
 ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.24.0@sha256:eb0b8b7b41042f494ad76cf5478fcfa2eea93a70479d6ee470c3e04c3174dd9a
 
-FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS certs
+FROM alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11 AS certs
 
 RUN apk add --update --no-cache ca-certificates
 
