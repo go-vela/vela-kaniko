@@ -12,7 +12,7 @@ jobs:
   prerelease:
     runs-on: ubuntu-latest
     env:
-      KANIKO_VERSION: v1.24.0
+      KANIKO_VERSION: v1.25.13
 
     steps:
     - name: clone
