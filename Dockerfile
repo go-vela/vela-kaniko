@@ -4,9 +4,9 @@
 ##    docker build --no-cache --target certs -t vela-kaniko:certs .    ##
 #########################################################################
 
-ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.24.0@sha256:eb0b8b7b41042f494ad76cf5478fcfa2eea93a70479d6ee470c3e04c3174dd9a
+ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.25.13@sha256:0923e5386a8330f7b9212d815f8a4c22433c9d4214ac76a2f654b6402a22ed53
 
-FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS certs
+FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b AS certs
 
 RUN apk add --update --no-cache ca-certificates
 
