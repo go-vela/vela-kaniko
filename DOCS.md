@@ -81,6 +81,27 @@ steps:
       repo: index.docker.io/octocat/hello-world
 ```
 
+### Tagging behavior: `tag` vs `tags`
+
+The plugin uses `tags` as the destination image tags and `tag` as build metadata:
+
+* `tags`: destination tags pushed for the image (defaults to `latest`).
+* `tag`: build tag metadata (typically populated from `VELA_BUILD_TAG` on tag events; can be overridden with the `tag` parameter).
+* `auto_tag`: appends one additional destination tag:
+  * tag event: appends `tag`
+  * all other events: appends `sha`
+
+In practice, `tag` alone does not publish a destination tag unless `auto_tag` is enabled.
+
+If `event` is not `tag`, the `tag` parameter is ignored and auto-tagging uses `sha`.
+
+Examples:
+
+* `tags: [latest, stable]` pushes `:latest` and `:stable`.
+* `tags: [latest]` + `auto_tag: true` on tag `v1.2.3` pushes `:latest` and `:v1.2.3`.
+* `tags: [latest]` + `auto_tag: true` on a push event pushes `:latest` and `:<commit-sha>`.
+* `tags: [latest]` + `event: tag` + `auto_tag: true` + `tag: v1.2.4` pushes `:latest` and `:v1.2.4`.
+
 Depending on the type of event, the image will be tagged as follows:
 
 * tag event (using `v1.0.0` as an example):
@@ -105,6 +126,30 @@ steps:
       registry: index.docker.io
       repo: index.docker.io/octocat/hello-world
 ```
+
+Sample of building with filepath parameters:
+
+```diff
+steps:
+  - name: publish_hello-world
+    image: target/vela-kaniko:latest
+    pull: always
+    parameters:
+      registry: index.docker.io
+      repo: index.docker.io/octocat/hello-world
++     context: ./deploy
++     dockerfile: ./deploy/Dockerfile.release
++     ignore_path:
++       - /workspace/deploy/tmp
++     tar_path: /workspace/image.tar
+```
+
+Path-oriented parameters:
+
+* `context`: local filesystem path used as the build context.
+* `dockerfile`: path to the Dockerfile, relative to the working directory.
+* `ignore_path`: one or more filesystem paths to ignore during snapshotting.
+* `tar_path`: output path when exporting the built image as a tarball.
 
 Sample of building and publishing an image with caching:
 
@@ -243,7 +288,7 @@ The following parameters are used to configure the image:
 
 | Name                   | Description                                                                                                             | Required | Default           | Environment Variables                                                           |
 |------------------------|-------------------------------------------------------------------------------------------------------------------------| -------- |-------------------|---------------------------------------------------------------------------------|
-| `auto_tag`             | enables automatic tagging of images (tag or sha, and `latest`)                                                          | `false`  | `false`           | `PARAMETER_AUTO_TAG`<br>`KANIKO_AUTO_TAG`                                       |
+| `auto_tag`             | enables automatic destination tagging by appending build `tag` (tag event) or `sha` (all other events)                | `false`  | `false`           | `PARAMETER_AUTO_TAG`<br>`KANIKO_AUTO_TAG`                                       |
 | `build_args`           | variables passed to image at build-time                                                                                 | `false`  | `N/A`             | `PARAMETER_BUILD_ARGS`<br>`KANIKO_BUILD_ARGS`                                   |
 | `cache`                | enable caching of image layers                                                                                          | `false`  | `false`           | `PARAMETER_CACHE`<br>`KANIKO_CACHE`                                             |
 | `cache_repo`           | specific repo to enable caching for                                                                                     | `false`  | `N/A`             | `PARAMETER_CACHE_REPO`<br>`KANIKO_CACHE_REPO`                                   |
@@ -270,8 +315,8 @@ The following parameters are used to configure the image:
 | `use_new_run`          | use experimental run implementation for detecting changes without requiring file system snapshots                       | `false`  | `false`           | `PARAMETER_USE_NEW_RUN`<br>`KANIKO_USE_NEW_RUN`                                 |
 | `single_snapshot`      | takes a single snapshot of the filesystem at the end of the build, so only one layer will be appended to the base image | `false`  | `false`           | `PARAMETER_SINGLE_SNAPSHOT`<br>`KANIKO_SINGLE_SNAPSHOT`                         |
 | `snapshot_mode`        | control how to snapshot the filesystem. - options: `full`, `redo`, or `time`                                            | `false`  | `N/A`             | `PARAMETER_SNAPSHOT_MODE`<br>`KANIKO_SNAPSHOT_MODE`                             |
-| `tag`                  | tag generated for build                                                                                                 | `false`  | **set by Vela**   | `PARAMETER_TAG`<br>`KANIKO_TAG`<br>`VELA_BUILD_TAG`                             |
-| `tags`                 | unique tags of the image                                                                                                | `true`   | `latest`          | `PARAMETER_TAGS`<br>`KANIKO_TAGS`                                               |
+| `tag`                  | build tag metadata (typically from `VELA_BUILD_TAG` on tag events; can be overridden; used by `auto_tag`)             | `false`  | **set by Vela**   | `PARAMETER_TAG`<br>`KANIKO_TAG`<br>`VELA_BUILD_TAG`                             |
+| `tags`                 | destination tags to publish for the image                                                                               | `true`   | `latest`          | `PARAMETER_TAGS`<br>`KANIKO_TAGS`                                               |
 | `tar_path`             | save the image as a tarball at path                                                                                     | `false`  | `N/A`             | `PARAMETER_TAR_PATH`<br>`KANIKO_TAR_PATH`                                       |
 | `target`               | set the target build stage for the image                                                                                | `false`  | `N/A`             | `PARAMETER_TARGET`<br>`KANIKO_TARGET`                                           |
 | `username`             | user name for communication with the registry                                                                           | `true`   | `N/A`             | `PARAMETER_USERNAME`<br>`KANIKO_USERNAME`<br>`DOCKER_USERNAME`                  |
@@ -300,3 +345,11 @@ steps:
 ```
 
 Below are a list of common problems and how to solve them:
+
+### I set `tag` but the image was not pushed with that tag
+
+`tag` is build metadata and is not published by itself. Use one of the following:
+
+* Set explicit `tags` values you want to push.
+* Enable `auto_tag: true` to append `tag` for tag events (or `sha` for non-tag events).
+* On tag events, set `tag` to override the value from `VELA_BUILD_TAG` when needed.
