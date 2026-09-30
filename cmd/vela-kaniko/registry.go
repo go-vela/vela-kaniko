@@ -62,7 +62,7 @@ func (r *Registry) Write() error {
 
 	// create basic authentication string for config.json file
 	basicAuth := base64.StdEncoding.EncodeToString(
-		[]byte(fmt.Sprintf(credentials, r.Username, r.Password)),
+		fmt.Appendf(nil, credentials, r.Username, r.Password),
 	)
 
 	// create output string for config.json file
