@@ -1,7 +1,7 @@
 github.com/Masterminds/semver/v3 v3.5.0 h1:kQceYJfbupGfZOKZQg0kou0DgAKhzDg2NZPAwZ/2OOE=
 github.com/Masterminds/semver/v3 v3.5.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
-github.com/go-vela/server v0.27.5 h1:3HGx1HIyK3Rpv/jYuOvXl8dDKvSeaOfmPozAEXB9aK0=
-github.com/go-vela/server v0.27.5/go.mod h1:MvVrkxZyThJygej2GYGtHG5edAVShTxx7hehn+InTNM=
+github.com/go-vela/server v0.28.8 h1:BH38PaBo1p6ZLmAcVo8pjAxbMTywHh2N7NFz6EbyXIs=
+github.com/go-vela/server v0.28.8/go.mod h1:/4joN1U9Rj5U7rjDRKcaf8iItXO+pQtvr2oDN/t6CM4=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/sirupsen/logrus v1.10.2 h1:G2SED73/qrAu6YwbdxOD6peLkCBI3z7L+ykJFTXJBBo=
