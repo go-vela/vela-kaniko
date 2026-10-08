@@ -4,7 +4,7 @@
 ##    docker build --no-cache --target certs -t vela-kaniko:certs .    ##
 #########################################################################
 
-ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.25.13@sha256:0923e5386a8330f7b9212d815f8a4c22433c9d4214ac76a2f654b6402a22ed53
+ARG KANIKO_IMAGE=target/kaniko-executor:debug-v1.25.19@sha256:8748e38b3bed2e7a91f13d07c1f6c64086a0430f511b59eadffa94876b3614b1
 
 FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS certs
 
